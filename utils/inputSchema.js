@@ -63,6 +63,10 @@ const remodelingTechInputSchema = Joi.object({
         name: Joi.array().items(Joi.string().valid('내단열 덧댐시공','외단열 덧댐시공').required()),
         size: Joi.array().items(Joi.number().min(0).max(100000).required())
     }),
+    roof: Joi.object({
+        name: Joi.array().items(Joi.string().valid('내단열 덧댐시공','외단열 덧댐시공').required()),
+        size: Joi.array().items(Joi.number().min(0).max(100000).required())
+    }),
     window: Joi.object({
         name: Joi.array().items(Joi.string().valid('창호교체').required()),
         size: Joi.array().items(Joi.number().min(0).max(100000).required())

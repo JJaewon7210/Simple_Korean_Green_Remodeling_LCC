@@ -6,9 +6,11 @@ import {
 } from '../controllers/client_input.js'
 
 // calculate technology cost
-const remodelingTechClasses = ['wall', 'window', 'heatpump', 'light', 'renewable', 'package']
+const remodelingTechClasses = ['wall', 'roof', 'window', 'heatpump', 'light', 'renewable', 'package']
 
 wallPayments = getAnnualCashFlows('wall', remodelingTechInput.wall.name[0], remodelingTechInput.wall.size[0], LCCAssumptionInput.analysisPeriod)
+
+roofPayments = getAnnualCashFlows('roof', remodelingTechInput.roof.name[0], remodelingTechInput.roof.size[0], LCCAssumptionInput.analysisPeriod)
 
 windowPayments = getAnnualCashFlows('window', remodelingTechInput.window.name[0], remodelingTechInput.window.size[0], LCCAssumptionInput.analysisPeriod)
 
@@ -19,8 +21,6 @@ lightPayments = getAnnualCashFlows('light', remodelingTechInput.light.name[0], r
 renewablePayments = getAnnualCashFlows('renewable', remodelingTechInput.renewable.name[0], remodelingTechInput.renewable.size[0], LCCAssumptionInput.analysisPeriod)
 
 packagePayments = getAnnualCashFlows('package', remodelingTechInput.package.name[0], remodelingTechInput.package.size[0], LCCAssumptionInput.analysisPeriod)
-
-
 
 var TECH_PAY = 0
 for (var i = 0; i < length(remodelingTechClasses); i++) {
