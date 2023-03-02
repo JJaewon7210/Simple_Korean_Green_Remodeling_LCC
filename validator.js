@@ -1,5 +1,5 @@
 import {TECH_PAY, E_NPV, G_NPV} from './calculate.js'
-import { userData } from './input.js'
+import { userData } from './Controllers/client_input.js'
 import { optimizeResults } from './optimize.js'
 
 console.log('totalRemodelingCost',userData.totalRemodelingCost)
