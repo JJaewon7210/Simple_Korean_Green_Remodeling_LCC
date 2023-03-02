@@ -1,12 +1,31 @@
-import { technologyAmount, electricityCostCalculate, gasCostCalculate, NPVcalculate } from './calculateCostLogics.js'
-import { userData, TechnologyData, ElectricityData, GasData } from '../controllers/client_input.js'
+import { getAnnualCashFlows, electricityCostCalculate, gasCostCalculate, NPVcalculate } from './calculateCostLogics.js'
+import {
+	userInput, energyContract,
+	monthlyElectricityInput, monthlyGasInput,
+	LCCAssumptionInput, remodelingTechInput, detailedFundInformationInput
+} from '../controllers/client_input.js'
 
 // calculate technology cost
-const technologyClsList = ['외벽', '창호', '공조', '냉난방', '조명', '전기', '신재생']
+const remodelingTechClasses = ['wall', 'window', 'heatpump', 'light', 'renewable', 'package']
+
+wallPayments = getAnnualCashFlows('wall', remodelingTechInput.wall.name[0], remodelingTechInput.wall.size[0], LCCAssumptionInput.analysisPeriod)
+
+windowPayments = getAnnualCashFlows('window', remodelingTechInput.window.name[0], remodelingTechInput.window.size[0], LCCAssumptionInput.analysisPeriod)
+
+heatpumpPayments = getAnnualCashFlows('heatpump', remodelingTechInput.heatpump.name[0], remodelingTechInput.heatpump.size[0], LCCAssumptionInput.analysisPeriod)
+
+lightPayments = getAnnualCashFlows('light', remodelingTechInput.light.name[0], remodelingTechInput.light.size[0], LCCAssumptionInput.analysisPeriod)
+
+renewablePayments = getAnnualCashFlows('renewable', remodelingTechInput.renewable.name[0], remodelingTechInput.renewable.size[0], LCCAssumptionInput.analysisPeriod)
+
+packagePayments = getAnnualCashFlows('package', remodelingTechInput.package.name[0], remodelingTechInput.package.size[0], LCCAssumptionInput.analysisPeriod)
+
+
+
 var TECH_PAY = 0
-for (var i = 0; i < 7; i++) {
-	var cls = technologyClsList[i]
-	var technologyPayments = technologyAmount(cls, TechnologyData[cls].name, TechnologyData[cls].size, userData.analysisPeriod)
+for (var i = 0; i < length(remodelingTechClasses); i++) {
+	var cls = remodelingTechClasses[i]
+	var technologyPayments = getAnnualCashFlows(cls, TechnologyData[cls].name, TechnologyData[cls].size, userData.analysisPeriod)
 	TECH_PAY += NPVcalculate(technologyPayments, userData.realInterest)
 }
 

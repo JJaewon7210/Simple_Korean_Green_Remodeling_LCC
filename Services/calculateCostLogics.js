@@ -228,7 +228,7 @@ export function gasCostCalculate(buildingType,monthGas,city ) {
  * @return {int} 해당 기술을 설치했을 때 소모되는 연간 금액을 반환
  * **/
 import { TechnologyJSON } from '../files/Technology.js'
-export function technologyAmount(cls, techName, size, period) {
+export function getAnnualCashFlows(cls, techName, size, period) {
 	const FILE = TechnologyJSON[cls][techName]
 	const initialCost = FILE['initial unit price'] * size
 	const repairRatio = FILE['repair ratio']

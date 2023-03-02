@@ -29,28 +29,28 @@ var LCCAssumptionInput = {
 
 var remodelingTechInput = {
     "wall": {
-        "name": "외단열", // 기술명
-        "size": 84 //726 //m2 값
+        "name": ["외단열 덧댐시공"], // 기술명
+        "size": [84] //726 //m2 값
     },
     "window": {
-        "name": "창호교체",// 기술명
-        "size": 21 //236.590504 //m2 값
+        "name": ["창호교체"],// 기술명
+        "size": [21] //236.590504 //m2 값
     },
     "heatpump": {
-        "name": "EHP",// 기술명
-        "size": 0 //m2 값
+        "name": ["EHP"],// 기술명
+        "size": [0] //m2 값
     },
     "light": {
-        "name": "LED",// 기술명
-        "size": 0 //EA 값
+        "name": ["LED"],// 기술명
+        "size": [0] //EA 값
     },
     "renewable": {
-        "name": "태양광",// 기술명
-        "size": 0 // kW 값
+        "name": ["태양광"],// 기술명
+        "size": [0] // kW 값
     },
     "package": {
-        "name": "BIPV+PV+ESS 하이브리드 시스템",// 기술명
-        "size": 0 // kW 값
+        "name": ["프리패브 외단열공법"],// 기술명
+        "size": [0] // kW 값
     }
 }
 
