@@ -224,13 +224,15 @@ import {} from '../configs/greenyPriceDB.js'
 export function getAnnualCashFlowsOfWallRoofWindow(cls, techName, size, userInput, LCCAssumptionInput) {
 
 	if (cls === 'wall' || 'roof') {
-		const filteredInfos = GreenyDB.filter(obj => obj["용도"] === buildingTypeBigCategory
+		const filteredInfos = GreenyDB.filter(
+			obj => obj["용도"] === buildingTypeBigCategory
 			&& obj["부위"] === techClass
 			&& obj["개선기준"] === buildingAge
 			&& obj["개선시나리오"] === techName
 			&& obj["개선목표"] === '법적수준');
 	} else if (cls === 'window') {
-		const filteredInfos = GreenyDB.filter(obj => obj["용도"] === buildingTypeBigCategory
+		const filteredInfos = GreenyDB.filter(
+			obj => obj["용도"] === buildingTypeBigCategory
 			&& obj["부위"] === techClass
 			&& obj["개선기준"] === buildingAge
 			&& obj["개선시나리오"] === techName
@@ -238,47 +240,99 @@ export function getAnnualCashFlowsOfWallRoofWindow(cls, techName, size, userInpu
 	} else {
 		throw new Error('Could not find the information from database. This is due to set wrong filter or set wrong cls.')
 	}
-
-	
 }
 
-/** 
- * @param {string} cls 기술유형 [외벽, 창호, 공조, 냉난방, 조명, 전기 ,신재생] 
- * @param {string} techName 기술명칭 ex.고효율 단열 복합시스템, 외단열 등 
- * @param {float} size 면적 및 수량. 기술의 금액을 구할 때는 단위기준금액 x(면적 또는 수량)으로 계산된다.
- * @param {int} period 해당 기술이 적용되는 총 연도
- * @return {int} 해당 기술을 설치했을 때 소모되는 연간 금액을 반환
- * **/
-import { TechnologyJSON } from '../files/Technology.js'
-export function getAnnualCashFlows(cls, techName, size, period) {
-	const FILE = TechnologyJSON[cls][techName]
-	const initialCost = FILE['initial unit price'] * size
-	const repairRatio = FILE['repair ratio']
-	const repairCycle = FILE['repair cycle']
-	const replacementCycle = FILE['replacementCycle']
 
-	var yearPayment = 0
-	var yearPayments = []
-	for (var i = 0; i < period; i++) {
-		if (i == 0) { yearPayment += initialCost }
+export function getAnnualCashFlowsOfWallRoof(cls, techName, size, userInput, analysisPeriod, materialCost) {
+	let filteredInfos = GreenyDB.filter(
+		obj => obj["용도"] === buildingTypeBigCategory
+		&& obj["부위"] === techClass
+		&& obj["개선재료"] === '일반'
+		&& obj["개선기준"] === buildingAge
+		&& obj["개선시나리오"] === techName
+		&& obj["개선목표"] === '법적수준');
+
+	let repairRatio = filteredInfos['수선율']
+	let repairCycle = filteredInfos['수선주기']
+	let replacementCycle = filteredInfos['교체주기']
+	let materialRatio = filteredInfos['재료비비율']
+	let initialCost = filteredInfos[userInput.areaCateogry] * size * (1-materialRatio) + materialCost
+	
+	return getAnnualCashFlows(repairRatio, repairCycle, replacementCycle, analysisPeriod, initialCost)
+}
+
+export function getAnnualCashFlowsOfWindow(cls, techName, size, userInput, analysisPeriod, materialCost) {
+	let filteredInfos = GreenyDB.filter(
+		obj => obj["용도"] === buildingTypeBigCategory
+		&& obj["부위"] === techClass
+		&& obj["개선기준"] === buildingAge
+		&& obj["개선시나리오"] === techName
+		&& obj["개선목표"] === '법적수준');
+
+	let repairRatio = filteredInfos['수선율']
+	let repairCycle = filteredInfos['수선주기']
+	let replacementCycle = filteredInfos['교체주기']
+	let materialRatio = filteredInfos['재료비비율']
+	let initialCost = filteredInfos[userInput.areaCateogry] * size * (1-materialRatio) + materialCost
+	
+	return getAnnualCashFlows(repairRatio, repairCycle, replacementCycle, analysisPeriod, initialCost)
+}
+
+export function getAnnualCashFlowsOfLight(cls, techName, size, userInput, analysisPeriod, materialCost) {
+	if (size <= 46) {
+		let _costLinearRegession = [10900, 152600]
+	} else if (size > 46 && size <= 59) {
+		let _costLinearRegession = [8384.615, 268307.7]
+	} else if (size > 59 && size <= 84) {
+		let _costLinearRegession = [13080, -8720]
+	} else if (size > 84) {
+		let _costLinearRegession = [13292.68, -26585.4]
+	}
+
+	let filteredInfos = GreenyDB.filter(
+		obj => obj["용도"] === buildingTypeBigCategory
+		&& obj["부위"] === techClass
+		&& obj["개선시나리오"] === techName);
+
+	let repairRatio = filteredInfos['수선율']
+	let repairCycle = filteredInfos['수선주기']
+	let replacementCycle = filteredInfos['교체주기']
+	let materialRatio = filteredInfos['재료비비율']
+	if (buildingTypeBigCategory === '주거') { 
+		let _cost = filteredInfos['가격']
+	} else {
+		let _cost = _costLinearRegession[0] * size + _costLinearRegession[1]
+	}
+	let initialCost = _cost * (1-materialRatio) + materialCost
+	
+	return getAnnualCashFlows(repairRatio, repairCycle, replacementCycle, analysisPeriod, initialCost)
+}
+
+function getAnnualCashFlows(repairRatio, repairCycle, replacementCycle, analysisPeriod, initialCost) {
+	var annualCashFlow = 0
+	var annualCashFlows = []
+	for (var i = 0; i < analysisPeriod; i++) {
+		if (i == 0) { annualCashFlow += initialCost }
 		if (repairCycle == 0) {
 			if (i == replacementCycle - 1) {
-				yearPayment += initialCost
+				annualCashFlow += initialCost
 			}
 		} else {
 			if (i == replacementCycle - 1) {
-				yearPayment += initialCost
+				annualCashFlow += initialCost
 			} else if (i == repairCycle - 1) {
-				yearPayment += initialCost * repairRatio
+				annualCashFlow += initialCost * repairRatio
 			} else {
-				yearPayment += 0
+				annualCashFlow += 0
 			}
 		}
-		yearPayments.push(yearPayment)
-		yearPayment = 0
+		annualCashFlows.push(annualCashFlow)
+		annualCashFlow = 0
 	}
-	return yearPayments
+	return annualCashFlows
 }
+
+
 
 export function totalRemodelingCost(TechnologyData) {
 	const technologyClsList = ['외벽', '창호', '공조', '냉난방', '조명', '전기', '신재생']
