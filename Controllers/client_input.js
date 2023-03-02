@@ -7,8 +7,8 @@ var userInput = {
 }
 
 var energyContract = {
-    'distinct': 'Residential',
-    'pressure': 'low pressure',
+    'distinct': '일반용갑1',
+    'pressure': '저압',
     'select': ''
 }
 
@@ -37,7 +37,7 @@ var remodelingTechInput = {
         "size": [84] //726 //m2 값
     },
     "window": {
-        "name": ["창호교체"],// 기술명
+        "name": ["창호 교체"],// 기술명
         "size": [21] //236.590504 //m2 값
     },
     "heatpump": {
@@ -45,15 +45,15 @@ var remodelingTechInput = {
         "size": [0] //m2 값
     },
     "light": {
-        "name": ["LED"],// 기술명
+        "name": ["LED 전면 교체"],// 기술명
         "size": [0] //EA 값
     },
     "renewable": {
-        "name": ["태양광"],// 기술명
+        "name": ["태양광 시스템"],// 기술명
         "size": [0] // kW 값
     },
     "package": {
-        "name": ["프리패브 외단열공법"],// 기술명
+        "name": ["단열방화도어"],// 기술명
         "size": [0] // kW 값
     }
 }
@@ -81,9 +81,3 @@ var detailedFundInformationInput = {
 export {userInput, energyContract, 
     monthlyElectricityInput, monthlyGasInput, 
     LCCAssumptionInput, remodelingTechInput, detailedFundInformationInput}
-
-// calculate totalRemodelingCost
-import { totalRemodelingCost } from "../services/calculateCostLogics.js"
-userData.totalRemodelingCost = totalRemodelingCost(TechnologyData)
-
-// export { userData, TechnologyData, ElectricityData, GasData }

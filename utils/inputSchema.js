@@ -68,23 +68,23 @@ const remodelingTechInputSchema = Joi.object({
         size: Joi.array().items(Joi.number().min(0).max(100000).required())
     }),
     window: Joi.object({
-        name: Joi.array().items(Joi.string().valid('창호교체').required()),
+        name: Joi.array().items(Joi.string().valid('창호 교체').required()),
         size: Joi.array().items(Joi.number().min(0).max(100000).required())
     }),
     heatpump: Joi.object({
-        name: Joi.array().items(Joi.string().valid('EHP','GHP','지열').required()),
+        name: Joi.array().items(Joi.string().valid('EHP','GHP','지열히트펌프').required()),
         size: Joi.array().items(Joi.number().min(0).max(100000).required())
     }),
     light: Joi.object({
-        name: Joi.array().items(Joi.string().valid('LED').required()),
+        name: Joi.array().items(Joi.string().valid('LED 전면 교체').required()),
         size: Joi.array().items(Joi.number().min(0).max(100000).required())
     }),
     renewable: Joi.object({
-        name: Joi.array().items(Joi.string().valid('태양광').required()),
+        name: Joi.array().items(Joi.string().valid('태양광 시스템').required()),
         size: Joi.array().items(Joi.number().min(0).max(100000).required())
     }),
     package: Joi.object({
-        name: Joi.array().items(Joi.string().valid('프리패브 외단열공법', '옥상 외단열외방수', '고단열고기밀 창호', '단열방화도어', '스마트배선시스템').required()),
+        name: Joi.array().items(Joi.string().valid('외단열 하이패브시스템', '옥상 외단열외방수', '고단열고기밀 창호', '단열방화도어', '스마트배선시스템 (PC 공법)').required()),
         size: Joi.array().items(Joi.number().min(0).max(100000).required())
     })
 })

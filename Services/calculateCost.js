@@ -1,9 +1,11 @@
 import { getAnnualCashFlows, electricityCostCalculate, gasCostCalculate, NPVcalculate } from './calculateCostLogics.js'
 import {
-	userInput, energyContract,
+	energyContract,
 	monthlyElectricityInput, monthlyGasInput,
 	LCCAssumptionInput, remodelingTechInput, detailedFundInformationInput
 } from '../controllers/client_input.js'
+
+import { userInput } from '../utils/updateInput.js'
 
 // calculate technology cost
 const remodelingTechClasses = ['wall', 'roof', 'window', 'heatpump', 'light', 'renewable', 'package']
