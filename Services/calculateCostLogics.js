@@ -220,6 +220,95 @@ export function gasCostCalculate(buildingType,monthGas,city ) {
 	return yearGasPayment
 }
 
+
+import {GreenyDB} from '../configs/greenyPriceDB.js'
+export function getAnnualCashFlowsOfWallRoofWindow(cls, techName, size, userInput, LCCAssumptionInput) {
+
+	// filter 01. Get Big Cateogry of building Type 
+	if (userInput.buildingType == '비주거') {
+		let buildingTypeBigCategory = '비주거'
+	} else {
+		let buildiygTypeBigCategory = '주거'
+	}
+
+	// filter 02. class (or category?) of the remodeling technology
+	switch (cls) {
+		case 'wall':
+			var techClass = '벽체'
+			break;
+		case 'roof':
+			var techClass = '지붕'
+			break;
+		case 'window':
+			var techClass = '창호'
+			break;
+		case 'heatpump':
+			var techClass = '냉난방기기'
+			break;
+		case 'light':
+			var techClass = '조명기기'
+			break;
+		case 'renewable':
+			var techClass = '신재생'
+			break;
+		case 'package':
+			var techClass = '기술패키지'
+			break;
+		default:
+			break;
+	}
+	
+	// filter 03. Get Building Age cateogry
+	if (userInput.approvalYear <= 1980) {
+		let buildingAge = '~1980년'
+	} else if (userInput.approvalYear > 1980 && userInput.approvalYear <= 1987) {
+		let buildingAge = '~1987년'
+	} else if (userInput.approvalYear > 1987 && userInput.approvalYear <= 2001) {
+		let buildingAge = '~2001년'
+	} else if (userInput.approvalYear > 2001) {
+		let buildingAge = '~2009년'
+	} else {
+		throw new Error('Wrong approvalYear was entered to userInput')
+	}
+
+	// filter 04. Get area category from cities 
+	let middle01Cities = [
+		'강원 춘천', '강원 원주', '강원 평창',
+		'경기(연천, 포천, 가평, 남양주, 의정부, 양주, 동두천, 파주)']
+
+	let middle02Cities = [
+		'서울', '경기', '인천', '세종', '강원 영동지역', '경기',
+		'충북 청주', '충북 충주', '충남 천안', '충남 서산',
+		'전북 전주', '전북 군산', '전북 익산', '경북 구미', '경북 안동',
+	]
+	let southernCities = [
+		'부산', '대구', '울산', '광주',
+		'전남 목포', '전남 순천', '전남 여수', '전남 나주',
+		'경북 포항', '경북 경주',
+		'경남 창원', '경남 진주', '경남 양산']
+
+	if (middle01Cities.includes(userInput.city)) {
+		let areaCateogry = '중부1'
+	} else if (middle02Cities.includes(userInput.city)) {
+		let areaCateogry = '중부2'
+	} else if (southernCities.includes(userInput.city)){
+		let areaCateogry = '남부'
+	} else {
+		let areaCateogry = '중부2'
+	}
+
+	if (cls === 'heatpump' || cls === 'light' || cls === 'renewable' || cls === 'package') {
+		let areaCateogry = '지역구분없음'
+	}
+
+	const filteredInfos = GreenyDB.filter(obj => obj["용도"] === buildingTypeBigCategory
+		&& obj["부위"] === techClass
+		&& obj["개선기준"] === buildingAge
+		&& obj["개선시나리오"] === techName
+		&& obj["개선목표"] === '법적수준');
+	
+}
+
 /** 
  * @param {string} cls 기술유형 [외벽, 창호, 공조, 냉난방, 조명, 전기 ,신재생] 
  * @param {string} techName 기술명칭 ex.고효율 단열 복합시스템, 외단열 등 
