@@ -4,7 +4,11 @@ import {
     LCCAssumptionInputSchema, remodelingTechInputSchema, detailedFundInformationInputSchema
 } from "./inputSchema.js"
 
-
+import {
+    userInput, energyContract,
+    monthlyElectricityInput, monthlyGasInput,
+    LCCAssumptionInput, remodelingTechInput, detailedFundInformationInput
+} from "./inputSchema.js"
 
 function errorCheckWithSchema(schema, inputData) {
     const { error, value } = schema.validate(inputData);
@@ -13,5 +17,12 @@ function errorCheckWithSchema(schema, inputData) {
     } else {
         console.log('Validated Data:', value);
     }
-    return error, value
 }
+
+errorCheckWithSchema(userInputSchema, userInput)
+errorCheckWithSchema(energyContractSchema, energyContract)
+errorCheckWithSchema(montlyElectricityInputSchema, monthlyElectricityInput)
+errorCheckWithSchema(montlyGasInputSchema, monthlyGasInput)
+errorCheckWithSchema(LCCAssumptionInputSchema, LCCAssumptionInput)
+errorCheckWithSchema(remodelingTechInputSchema, remodelingTechInput)
+errorCheckWithSchema(detailedFundInformationInputSchema, detailedFundInformationInput)
