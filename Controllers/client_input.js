@@ -74,9 +74,12 @@ var detailedFundInformationInput = {
     'initialUserCapital': 0 // 개인자본 (B6)
 }
 
+export {userInput, energyContract, 
+    monthlyElectricityInput, monthlyGasInput, 
+    LCCAssumptionInput, remodelingTechInput, detailedFundInformationInput}
 
 // calculate totalRemodelingCost
 import { totalRemodelingCost } from "../services/calculateCostLogics.js"
 userData.totalRemodelingCost = totalRemodelingCost(TechnologyData)
 
-export { userData, TechnologyData, ElectricityData, GasData }
+// export { userData, TechnologyData, ElectricityData, GasData }
