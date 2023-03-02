@@ -1,7 +1,7 @@
 import Genetic from '../model/genetic.js'
 import { NPVcalculate, loanCalculate } from './calculateCostLogics.js'
-import { greenRemodelingInterestSupportProject, seoulHomeRepairLoanProject, ruralHousingImrpoveProject, mortageLoanProject, creditLoanProject } from './utils/fund.js'
-import { userData } from '../Controllers/client_input.js';
+import { greenRemodelingInterestSupportProject, seoulHomeRepairLoanProject, ruralHousingImrpoveProject, mortageLoanProject, creditLoanProject } from './utils/fund.js.js'
+import { userData } from '../controllers/client_input.js';
 
 var genetic = Genetic.create();
 genetic.optimize = Genetic.Optimize.Minimize;

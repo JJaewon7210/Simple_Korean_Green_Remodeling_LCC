@@ -1,6 +1,6 @@
-import {TECH_PAY, E_NPV, G_NPV} from './calculate.js'
+import {TECH_PAY, E_NPV, G_NPV} from './calculate.js.js'
 import { userData } from './client_input.js'
-import { optimizeResults } from './optimize.js'
+import { optimizeResults } from './optimize.js.js'
 
 console.log('totalRemodelingCost',userData.totalRemodelingCost)
 console.log('optimizeResults:',optimizeResults)

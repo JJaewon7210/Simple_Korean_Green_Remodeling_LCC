@@ -67,7 +67,7 @@ var GasData = {
 }
 
 // calculate totalRemodelingCost
-import { totalRemodelingCost } from "../Services/calculateCostLogics.js"
+import { totalRemodelingCost } from "../services/calculateCostLogics.js"
 userData.totalRemodelingCost = totalRemodelingCost(TechnologyData)
 
 export { userData, TechnologyData, ElectricityData, GasData }
