@@ -1,4 +1,4 @@
-export var  ElectricityResidentalPriceDB = [
+export var  electricityResidentalPriceDB = [
     {
         "용도": "주택용",
         "전압": "저압",
@@ -25,7 +25,7 @@ export var  ElectricityResidentalPriceDB = [
     }
 ]
 
-export var ElectricityIndustrialPriceDB = [
+export var electricityIndustrialPriceDB = [
     {
         "용도": "일반용갑1",
         "전압": "저압",

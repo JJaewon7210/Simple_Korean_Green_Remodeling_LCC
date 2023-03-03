@@ -1,5 +1,5 @@
 // 데이터 업데이트: 2023.02.01
-export var GasPriceDB = [
+export var gasPriceDB = [
     {
         "지역": "도매요금",
         "(공급회사)": "",
