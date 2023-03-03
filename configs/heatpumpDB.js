@@ -1,4 +1,4 @@
-const heatpumpDB = [
+export var heatpumpDB = [
     {
         "용도": "비주거",
         "부위": "냉난방",

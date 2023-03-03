@@ -3,7 +3,7 @@ function updateUserInput(userInput) {
     if (userInput.buildingType == '비주거') {
         userInput.buildingTypeBigCategory = '비주거'
     } else {
-        userInput.buildiygTypeBigCategory = '주거'
+        userInput.buildingTypeBigCategory = '주거'
     }
 
     // filter 02. Get Building Age cateogry
@@ -49,10 +49,10 @@ function updateUserInput(userInput) {
 }
 
 import { userInput } from "../controllers/client_input.js";
-userInput = updateUserInput(userInput)
+var updatedUserInput = updateUserInput(userInput)
 
 // calculate totalRemodelingCost [DO]
 // import { totalRemodelingCost } from "../services/calculateCostLogics.js"
 // userData.totalRemodelingCost = totalRemodelingCost(TechnologyData)
 
-export { userInput }
+export { updatedUserInput }

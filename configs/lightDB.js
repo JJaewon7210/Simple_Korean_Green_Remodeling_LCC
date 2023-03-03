@@ -1,4 +1,4 @@
-const lightDB = [
+export var lightDB = [
     {
         "용도": "비주거",
         "부위": "조명기기",

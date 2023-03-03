@@ -1,13 +1,11 @@
-import {TECH_PAY, E_NPV, G_NPV} from './calculate.js.js'
-import { userData } from './client_input.js'
-import { optimizeResults } from './optimize.js.js'
+import { totalInitialCost, techNPV, electricityNPV, gasNPV } from '../services/getNPV.js'
+import { optimizeResults } from '../services/optimizeGeneticAlgorithm.js'
 
-console.log('totalRemodelingCost',userData.totalRemodelingCost)
+console.log('totalInitialCost',totalInitialCost)
 console.log('optimizeResults:',optimizeResults)
-console.log('TECH_PAY:',TECH_PAY)
-console.log('E_NPV:',E_NPV)
-console.log('G_NPV:',G_NPV)
-
+console.log('technology NPV:',techNPV)
+console.log('electricityNPV:',electricityNPV)
+console.log('gasNPV:',gasNPV)
 
 // 대출 금액
 const B1 = optimizeResults.greenRemodelingInterestSupportProjectResult
@@ -16,14 +14,12 @@ const B3 = optimizeResults.ruralHousingImrpoveProjectResult
 const B4 = optimizeResults.mortageLoanProjectResult
 const B5 = optimizeResults.creditLoanProjectResult
 
-
 // 분석 결과
-const ICC = userData.totalRemodelingCost
-const NPV = (TECH_PAY - optimizeResults.NPV) + (E_NPV+G_NPV)
-const SIR =  (E_NPV+G_NPV) / (TECH_PAY - optimizeResults.NPV) 
+const ICC = totalInitialCost
+const NPV = (techNPV - optimizeResults.NPV) + (electricityNPV+gasNPV)
+const SIR = (electricityNPV+gasNPV) / (techNPV - optimizeResults.NPV) 
 const TR  = - optimizeResults.NPV
-const ECR = (E_NPV+G_NPV)
-
+const ECR = (electricityNPV+gasNPV)
 
 console.log('ICC',ICC)
 console.log('NPV',NPV)

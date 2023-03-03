@@ -1,4 +1,4 @@
-const windowDB = [
+export var windowDB = [
     {
         "용도": "비주거",
         "부위": "창호",

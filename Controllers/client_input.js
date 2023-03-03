@@ -13,7 +13,7 @@ var energyContract = {
 }
 
 var monthlyElectricityInput = {
-    'before': [87.36, 73.08, 85.68, 88.20, 83.16, 85.68, 105.84, 109.20, 76.44, 89.88, 85.68, 90.72], // 리모델링 전 월간 전기 에너지 소모량 (12개)
+    'before': [97.36, 93.08, 95.68, 98.20, 93.16, 95.68, 125.84, 139.20, 96.44, 99.88, 95.68, 92.72], // 리모델링 전 월간 전기 에너지 소모량 (12개)
     'after':  [87.36, 73.08, 85.68, 88.20, 83.16, 85.68, 115.08, 130.02, 76.44, 89.88, 85.68, 90.72], // 리모델링 후 월간 전기 에너지 소모량 (12개)
 }
 
@@ -29,38 +29,38 @@ var LCCAssumptionInput = {
 
 var remodelingTechInput = {
     "wall": {
-        "name": ["외단열 덧댐시공"], 
-        "size": [84], //m2
-        "material cost": [1000000]
+        "name": ["외단열 덧댐시공", "외단열 덧댐시공"], 
+        "size": [1, 1], //m2
+        "material cost": [1000000, 1000000]
     },
     "roof": {
         "name": ["외단열 덧댐시공"], 
-        "size": [84], //m2
+        "size": [1], //m2
         "material cost": [1000000] 
     },
     "window": {
         "name": ["창호 교체"],
-        "size": [21], //m2
+        "size": [1], //m2
         "material cost": [1000000] 
     },
     "heatpump": {
         "name": ["EHP"],
-        "size": [0], //EA
+        "size": [1], //EA
         "material cost": [1000000]
     },
     "light": {
         "name": ["LED 전면 교체"],
-        "size": [0], //EA
+        "size": [1], //m2
         "material cost": [1000000]
     },
     "renewable": {
         "name": ["태양광 시스템"],
-        "size": [0], //kW
+        "size": [1], //kW
         "material cost": [1000000]
     },
     "package": {
         "name": ["단열방화도어"],
-        "size": [0] //various 
+        "size": [1] //various 
     }
 }
 
@@ -79,7 +79,7 @@ var detailedFundInformationInput = {
     'applySeoul': false, // 서울시 집수리 융자사업을 적용하는 경우 true, 아닌 경우 false
     'applyRural': false, // 농어촌 주택개량사업을 적용하는 경우 true, 아닌 경우 false
     'applyMortage': true, // 주택담보대출을 적용하는 경우 true, 아닌 경우 false
-    'applyCredit': true, // 신용대출을 적용하는 경우 true, 아닌 경우 false
+    'applyCredit': false, // 신용대출을 적용하는 경우 true, 아닌 경우 false
 
     'initialUserCapital': 0 // 개인자본 (B6)
 }

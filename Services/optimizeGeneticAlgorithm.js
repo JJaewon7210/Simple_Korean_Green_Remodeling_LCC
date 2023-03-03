@@ -1,7 +1,13 @@
 import Genetic from '../model/genetic.js'
-import { NPVcalculate, loanCalculate } from './calculateCostLogics.js'
-import { greenRemodelingInterestSupportProject, seoulHomeRepairLoanProject, ruralHousingImrpoveProject, mortageLoanProject, creditLoanProject } from './utils/fund.js.js'
-import { userData } from '../controllers/client_input.js';
+import { NPVcalculate, loanCalculate } from './cashflowNPV.js'
+import { greenRemodelingInterestSupportProject, seoulHomeRepairLoanProject, ruralHousingImrpoveProject, mortageLoanProject, creditLoanProject } from '../configs/fund.js'
+import {
+	energyContract,
+	monthlyElectricityInput, monthlyGasInput,
+	LCCAssumptionInput, remodelingTechInput, detailedFundInformationInput
+} from '../controllers/client_input.js'
+import { updatedUserInput } from '../utils/updateInput.js'
+import { totalInitialCost } from './getNPV.js'
 
 var genetic = Genetic.create();
 genetic.optimize = Genetic.Optimize.Minimize;
@@ -9,32 +15,38 @@ genetic.select1 = Genetic.Select1.Tournament2;
 genetic.select2 = Genetic.Select2.Tournament2;
 
 genetic.seed = function () {
-	var totalRemodelingCost = parseInt((this.userData.totalRemodelingCost/100000)*100000)
+	var totalRemodelingCost = parseInt((this.userData.totalRemodelingCost/10000)*10000)
 	var B1 = this.fund.greenRemodelingInterestSupportProject
 	var B2 = this.fund.seoulHomeRepairLoanProject
 	var B3 = this.fund.ruralHousingImrpoveProject
 	var B4 = this.fund.mortageLoanProject
 	var B5 = this.fund.creditLoanProject
 	var B6 = this.userData.initialUserCapital
+
 	var L = {
 		essentialLoan: (B1.min + B2.min + B3.min + B4.min + B5.min + B6),
-		remainLoan: parseInt((totalRemodelingCost - (B1.min + B2.min + B3.min + B4.min + B5.min + B6)) / 100000) * 100000,
+		remainLoan: parseInt((totalRemodelingCost - (B1.min + B2.min + B3.min + B4.min + B5.min + B6)) / 10000) * 10000,
 		totalGap: B1.gap + B2.gap + B3.gap + B4.gap + B5.gap
 	}
+
 	if (L.remainLoan >= L.totalGap) {throw new Error("Total remodeling Cost is too big.")}
+
 	function allocateRandomLoanForProject(L, Business) {
 		L.totalGap -= Business.gap
+
 		if (L.remainLoan > L.totalGap) {
 			var mustAllocate = L.remainLoan - L.totalGap
 		} else {
 			var mustAllocate = 0
 		}
+
 		if (L.remainLoan < Business.gap) {
 			var maxAllocate = L.remainLoan
 		} else {
 			var maxAllocate = Business.gap
 		}
-		var projLoan = mustAllocate + Math.round(Math.random() * (maxAllocate - mustAllocate) / 100000) * 100000
+
+		var projLoan = mustAllocate + Math.round(Math.random() * (maxAllocate - mustAllocate) / 10000) * 10000
 		L.remainLoan -= projLoan
 		Business.loanAmount = projLoan + Business.min
 		Business.gap = Business.max - Business.loanAmount
@@ -92,7 +104,7 @@ genetic.mutate = function (entity) {
 		} else {
 			var maxAllocate = Business.gap
 		}
-		var projLoan = mustAllocate + Math.round(Math.random() * (maxAllocate - mustAllocate) / 100000) * 100000
+		var projLoan = mustAllocate + Math.round(Math.random() * (maxAllocate - mustAllocate) / 10000) * 10000
 		L.remainLoan -= projLoan
 		Business.loanAmount = projLoan + Business.loanAmount
 		Business.gap = Business.max - Business.loanAmount
@@ -147,7 +159,7 @@ genetic.crossover = function (mother, father) {
 		} else {
 			var maxAllocate = Business.gap
 		}
-		var projLoan = mustAllocate + Math.round(Math.random() * (maxAllocate - mustAllocate) / 100000) * 100000
+		var projLoan = mustAllocate + Math.round(Math.random() * (maxAllocate - mustAllocate) / 10000) * 10000
 		L.remainLoan -= projLoan
 		Business.loanAmount = projLoan + Business.loanAmount
 		Business.gap = Business.max - Business.loanAmount
@@ -171,18 +183,40 @@ genetic.generation = function (pop, generation, stats) {
 	return true
 };
 
-genetic.userData = userData
+// Add information to 'detailed fund information input'
+detailedFundInformationInput.buildingType   = updatedUserInput.buildingType
+detailedFundInformationInput.card           = updatedUserInput.card
+detailedFundInformationInput.city           = updatedUserInput.city
+detailedFundInformationInput.approvalYear   = updatedUserInput.approvalYear
+detailedFundInformationInput.realInterest   = LCCAssumptionInput.realInterest
+detailedFundInformationInput.analysisPeriod = LCCAssumptionInput.analysisPeriod
+detailedFundInformationInput.totalRemodelingCost = totalInitialCost
+
+genetic.userData = detailedFundInformationInput
 
 genetic.fund = {
-	"greenRemodelingInterestSupportProject": new greenRemodelingInterestSupportProject(genetic.userData.buildingType, genetic.userData.mortageLoanInterest, genetic.userData.creditLoanInterest, genetic.userData.card, genetic.userData.realInterest, genetic.userData.applyGreen),
-	"seoulHomeRepairLoanProject": new seoulHomeRepairLoanProject(genetic.userData.buildingType, genetic.userData.mortageLoanInterest, genetic.userData.creditLoanInterest, genetic.userData.approvalYear, genetic.userData.realInterest,  genetic.userData.applySeoul),
-	"ruralHousingImrpoveProject": new ruralHousingImrpoveProject(genetic.userData.realInterest,  genetic.userData.applyRural),
-	"mortageLoanProject": new mortageLoanProject(genetic.userData.mortageLoanMaxLimit, genetic.userData.mortageLoanInterest, genetic.userData.mortageLoanRepaymentMonth, genetic.userData.mortageLoanHoldMonth, genetic.userData.realInterest,  genetic.userData.applyMortage),
-	"creditLoanProject": new creditLoanProject(genetic.userData.creditLoanMaxLimit, genetic.userData.creditLoanInterest, genetic.userData.creditLoanRepaymentMonth, genetic.userData.creditLoanHoldMonth, genetic.userData.realInterest,  genetic.userData.applyCredit)
+	"greenRemodelingInterestSupportProject": new greenRemodelingInterestSupportProject(
+		genetic.userData.buildingType,       genetic.userData.mortageLoanInterest, 
+		genetic.userData.creditLoanInterest, genetic.userData.card, 
+		genetic.userData.realInterest,       genetic.userData.applyGreen),
+	"seoulHomeRepairLoanProject": new seoulHomeRepairLoanProject(
+		genetic.userData.buildingType,       genetic.userData.mortageLoanInterest, 
+		genetic.userData.creditLoanInterest, genetic.userData.approvalYear, 
+		genetic.userData.realInterest,       genetic.userData.applySeoul),
+	"ruralHousingImrpoveProject": new ruralHousingImrpoveProject(
+		genetic.userData.realInterest,       genetic.userData.applyRural),
+	"mortageLoanProject": new mortageLoanProject(
+		genetic.userData.mortageLoanMaxLimit,       genetic.userData.mortageLoanInterest, 
+		genetic.userData.mortageLoanRepaymentMonth, genetic.userData.mortageLoanHoldMonth, 
+		genetic.userData.realInterest,              genetic.userData.applyMortage),
+	"creditLoanProject": new creditLoanProject(
+		genetic.userData.creditLoanMaxLimit,       genetic.userData.creditLoanInterest, 
+		genetic.userData.creditLoanRepaymentMonth, genetic.userData.creditLoanHoldMonth, 
+		genetic.userData.realInterest,             genetic.userData.applyCredit)
 }
 
 var config = {
-	"iterations": 500
+	"iterations": 300
 	, "size": 30
 	, "crossover": 0.9
 	, "mutation": 0.1

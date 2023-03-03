@@ -1,4 +1,4 @@
-const roofDB = [
+export var roofDB = [
     {
         "용도": "비주거",
         "부위": "지붕",

@@ -11,8 +11,8 @@ export function electricityCostCalculate( montlyElectricityConsumption, userInpu
 }
 
 function residentialElectricityCalculate(montlyElectricityConsumption, energyContract) {
-	let FILE = electricityResidentalPriceDB.filter(
-		obj => obj["전압"] === energyContract.pressure);
+	const FILE = electricityResidentalPriceDB.filter(
+		obj => obj["전압"] == energyContract.pressure)[0];
 
 	var yearElectricityPayment = 0
 	for (var i = 0; i<12; i++){
@@ -67,11 +67,11 @@ function residentialElectricityCalculate(montlyElectricityConsumption, energyCon
 
 function nonResidentialElectricityCalculate(montlyElectricityConsumption, energyContract) {
 
-	let FILE = electricityIndustrialPriceDB.filter(
-		obj => obj["전압"] === energyContract.pressure
-			&& obj["용도"] === energyContract.distinct
-			&& obj["선택"] === energyContract.select
-			&& obj["시간대"] === '중간부하');
+	const FILE = electricityIndustrialPriceDB.filter(
+		obj => obj["전압"] == energyContract.pressure
+			&& obj["용도"] == energyContract.distinct
+			&& obj["선택"] == energyContract.select
+			&& obj["시간대"] == '중간부하')[0];
 
 
 	var yearElectricityPayment = 0
@@ -100,8 +100,8 @@ function nonResidentialElectricityCalculate(montlyElectricityConsumption, energy
 
 export function gasCostCalculate(monthlyGasConsumption, userInput) {
 	
-	let FILE = gasPriceDB.filter(
-		obj => obj["지역"] === userInput.city);
+	const FILE = gasPriceDB.filter(
+		obj => obj["지역"] == userInput.city)[0];
 
 	const UnitHeat = [43.028, 42.398, 42.65, 42.719, 42.681, 42.539, 42.573, 42.413, 42.5, 42.842, 42.802, 42.716]
 	const BasicPrice = FILE['주택용_기본요금']

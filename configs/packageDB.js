@@ -1,4 +1,4 @@
-const packageDB = [
+export var packageDB = [
     {
         "용도": "비주거",
         "부위": "벽체",

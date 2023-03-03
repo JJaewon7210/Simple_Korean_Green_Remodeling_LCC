@@ -38,8 +38,9 @@ export class greenRemodelingInterestSupportProject extends Project  {
             this.min = 0
             this.max = 0
         }
-
+        
         this.gap = this.max - this.min
+
         // set interest ratio
         this.interestRatio = Math.min(mortageLoanInterest, creditLoanInterest)
         // set interest support ratio and repayment period
@@ -102,14 +103,14 @@ export class seoulHomeRepairLoanProject extends Project {
         } else {
             throw new Error ('wrong buildingType. please select with [주거-단독, 주거-다중, 주거-다가구, 주거-다세대, 주거-연립]')
         }
-        this.gap = this.max - this.min
-
+        
         // if do not apply Project
         if (apply == false) {
             this.min = 0
             this.max = 0
         }
 
+        this.gap = this.max - this.min
 
         // set interest ratio and repayment ratio
         if (2022-approvalYear >= 20) {
@@ -144,14 +145,14 @@ export class ruralHousingImrpoveProject extends Project {
         this.interestSupportRatio = 0
         this.repaymentPeriod = 240
         this.holdPeriod = 12
-        this.gap = this.max - this.min
-
+        
         // if do not apply Project
         if (apply == false) {
             this.min = 0
             this.max = 0
         }
-
+        
+        this.gap = this.max - this.min
     }
 }
 
@@ -166,12 +167,13 @@ export class mortageLoanProject extends Project {
         this.repaymentPeriod = mortageLoanRepaymentMonth
         this.holdPeriod = mortageLoanHoldMonth
         this.realInterest = realInterest
-        this.gap = this.max - this.min
         // if do not apply Project
         if (apply == false) {
             this.min = 0
             this.max = 0
         }
+
+        this.gap = this.max - this.min
     }
 }
 
@@ -186,11 +188,12 @@ export class creditLoanProject extends Project {
         this.repaymentPeriod = creditLoanRepaymentMonth
         this.holdPeriod = creditLoanHoldMonth
         this.realInterest = realInterest
-        this.gap = this.max - this.min
         // if do not apply Project
         if (apply == false) {
             this.min = 0
             this.max = 0
         }
+        
+        this.gap = this.max - this.min
     }
 }
