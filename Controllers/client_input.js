@@ -9,7 +9,7 @@ var userInput = {
 var energyContract = {
     'distinct': '일반용갑1',
     'pressure': '저압',
-    'select': ''
+    'select': '' // 선택이 안되는경우에는 ''로 남겨놓는다.
 }
 
 var monthlyElectricityInput = {

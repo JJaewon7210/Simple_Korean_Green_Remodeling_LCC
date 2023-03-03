@@ -1,61 +1,22 @@
+import { electricityResidentalPriceDB, electricityIndustrialPriceDB } from "../configs/electricityPriceDB.js"
+import { gasPriceDB } from "../configs/gasPriceDB.js";
 
-export function loanCalculate(loanAmount, interestRatio, interestSupportRatio, repaymentPeriod, holdPeriod) {
-	
-	if (interestRatio > interestSupportRatio) {
-		var interest = interestRatio - interestSupportRatio
+export function electricityCostCalculate( montlyElectricityConsumption, userInput, energyContract) {
+	if (userInput.buildingType == '비주거') {
+		var annualElectricityCashFlows = nonResidentialElectricityCalculate(montlyElectricityConsumption, energyContract)
 	} else {
-		var interest = 0
-		var yearPayment = 0
-		var yearPayments = []
-		for (var i = 0; i < repaymentPeriod; i++){
-			var monthPayment = loanAmount/repaymentPeriod
-			yearPayment += monthPayment
-			if (i == 0) { continue }
-			if (i % 12 == 11 ) { 
-				yearPayments.push(yearPayment)
-				yearPayment = 0 
-			}
-		}
-		return yearPayments
+		var annualElectricityCashFlows = residentialElectricityCalculate(montlyElectricityConsumption, energyContract)
 	}
-
-	var yearPayment  = 0
-	var yearPayments = []
-	var loanRemain = loanAmount
-	var interestAmount = 0
-	var monthPayment = 0
-	for (var i = 0; i < repaymentPeriod; i++) {
-		interestAmount = loanRemain * (interest / 12)
-		if (holdPeriod > i) {
-			monthPayment = interestAmount
-		} else {
-			monthPayment = loanAmount * (interest / 12) * ((1 + (interest / 12)) ** (repaymentPeriod - holdPeriod)) / ((1 + (interest / 12)) ** (repaymentPeriod - holdPeriod) - 1)
-		}
-		loanRemain = loanRemain + interestAmount - monthPayment
-		yearPayment += monthPayment
-		if (i == 0) { continue }
-		if (i % 12 == 11 ) { 
-			yearPayments.push(yearPayment)
-			yearPayment = 0 }
-	}
-	return yearPayments
+	return annualElectricityCashFlows
 }
 
-export function electricityCostCalculate(buildingType, monthElectricities, E_distinct, E_pressure, E_select ) {
-	if (buildingType == '비주거') {
-		var yearPayments = nonResidentialElectricityCalculate(monthElectricities, E_distinct, E_pressure, E_select)
-	} else {
-		var yearPayments = residentialElectricityCalculate(monthElectricities, E_distinct, E_pressure, E_select)
-	}
-	return yearPayments
-}
-
-export function residentialElectricityCalculate(monthElectricities, E_distinct, E_pressure, E_select) {
-	const FILE = ElectricityJSON[E_distinct][E_pressure]
+function residentialElectricityCalculate(montlyElectricityConsumption, energyContract) {
+	let FILE = electricityResidentalPriceDB.filter(
+		obj => obj["전압"] === energyContract.pressure);
 
 	var yearElectricityPayment = 0
 	for (var i = 0; i<12; i++){
-		var E = monthElectricities[i]
+		var E = montlyElectricityConsumption[i]
 
 		// different step kWH for summer
 		if ([6,8].includes(i) ) {
@@ -68,28 +29,28 @@ export function residentialElectricityCalculate(monthElectricities, E_distinct, 
 		
 		// step price
 		if (E <= step01_kWH) {
-			var ElecPrice = E * FILE['stage1']
-			var basicPrice = FILE['basic1']
+			var ElecPrice = E * FILE['구간1']
+			var basicPrice = FILE['기본요금1']
 			
 		} else if (E > step01_kWH & E <= step01_kWH ) {
-			var ElecPrice = step01_kWH * FILE['stage1'] + (E-step01_kWH) * FILE['stage2']
-			var basicPrice = FILE['basic2']
+			var ElecPrice = step01_kWH * FILE['구간1'] + (E-step01_kWH) * FILE['구간2']
+			var basicPrice = FILE['기본요금2']
 			
 		} else {
-			var ElecPrice = step01_kWH * FILE['stage1'] + (step02_kWH-step01_kWH) * FILE['stage2'] + (E-step02_kWH) * FILE['stage3']
-			var basicPrice = FILE['basic3']
+			var ElecPrice = step01_kWH * FILE['구간1'] + (step02_kWH-step01_kWH) * FILE['구간2'] + (E-step02_kWH) * FILE['구간3']
+			var basicPrice = FILE['기본요금3']
 		}
 
 		// additional price for super user
 		if ([6,8].includes(i)) {
 			if (E > 1000) {
-				ElecPrice += (E-step02_kWH) * (FILE['super_summer']-FILE['stage3'])
+				ElecPrice += (E-step02_kWH) * (FILE['슈펴유저_여름']-FILE['구간3'])
 			}
 		}
 		
 		if ([0,1,11].includes(i)){
 			if (E > 1000) {
-				ElecPrice += (E-step02_kWH) * (FILE['super_winter']-FILE['stage3'])
+				ElecPrice += (E-step02_kWH) * (FILE['슈퍼유저_겨울']-FILE['구간3'])
 			}
 		}
 		
@@ -104,28 +65,26 @@ export function residentialElectricityCalculate(monthElectricities, E_distinct, 
 	return yearElectricityPayment
 }
 
-export function nonResidentialElectricityCalculate(monthElectricities, E_distinct, E_pressure, E_select) {
-	if (E_distinct == 'Basic GAB 1') {
-		if (E_pressure == 'low pressure') {
-			const FILE = ElectricityJSON[E_distinct][E_pressure]
-		} else {
-			const FILE = ElectricityJSON[E_distinct][E_pressure][E_select]
-		}
-	} else {
-		const FILE = ElectricityJSON[E_distinct][E_pressure][E_select]['medium']
-	}
+function nonResidentialElectricityCalculate(montlyElectricityConsumption, energyContract) {
+
+	let FILE = electricityIndustrialPriceDB.filter(
+		obj => obj["전압"] === energyContract.pressure
+			&& obj["용도"] === energyContract.distinct
+			&& obj["선택"] === energyContract.select
+			&& obj["시간대"] === '중간부하');
+
 
 	var yearElectricityPayment = 0
 	for (i = 0; i<12; i++){
-		var E = monthElectricities[i]
+		var E = montlyElectricityConsumption[i]
 
 		// different price for each season
 		if ([6,8].includes(i)) {
-			var ElecPrice = E * FILE['summer']
+			var ElecPrice = E * FILE['여름철']
 		} else if ([0,1,11]/includes(i)) {
-			var ElecPrice = E * FILE['winter']
+			var ElecPrice = E * FILE['겨울철']
 		} else {
-			var ElecPrice = E * FILE['spring']
+			var ElecPrice = E * FILE['봄가을철']
 		}
 		
 		// final price including VAT ect
@@ -139,30 +98,32 @@ export function nonResidentialElectricityCalculate(monthElectricities, E_distinc
 	return yearElectricityPayment
 }
 
-export function gasCostCalculate(buildingType,monthGas,city ) {
+export function gasCostCalculate(monthlyGasConsumption, userInput) {
 	
-	const FILE = GasJSON[city]
-	const UnitHeat = GasJSON['unit heat']
-	const BasicPrice = GasJSON[city]['basic']
+	let FILE = gasPriceDB.filter(
+		obj => obj["지역"] === userInput.city);
+
+	const UnitHeat = [43.028, 42.398, 42.65, 42.719, 42.681, 42.539, 42.573, 42.413, 42.5, 42.842, 42.802, 42.716]
+	const BasicPrice = FILE['주택용_기본요금']
 	const Factor = 0.998
 	
 	var yearGasPayment = 0
 	for (let i = 0; i < 12; i++) {
-		var G = monthGas[i]
+		var G = monthlyGasConsumption[i]
 		
 		// Basic 1. different price for each season
-		if (buildingType == '비주거') {
+		if (userInput.buildingType == '비주거') {
 			if ([5, 6, 7, 8].includes(i)) {
-				var GasPrice = G * FILE['Basic 1']['summer'] * Factor * UnitHeat[i] + BasicPrice
+				var GasPrice = G * FILE['일반용1_하절기'] * Factor * UnitHeat[i] + BasicPrice
 			} else if ([0, 1, 2, 11] / includes(i)) {
-				var GasPrice = G * FILE['Basic 1']['winter'] * Factor * UnitHeat[i] + BasicPrice
+				var GasPrice = G * FILE['일반용1_동절기'] * Factor * UnitHeat[i] + BasicPrice
 			} else {
-				var GasPrice = G * FILE['Basic 1']['spring'] * Factor * UnitHeat[i] + BasicPrice
+				var GasPrice = G * FILE['일반용1_기타월'] * Factor * UnitHeat[i] + BasicPrice
 			}
 			
-			// Residential. same price for each season
+		// Residential. same price for each season
 		} else {
-			var GasPrice = G * FILE['Residential'] * Factor * UnitHeat[i] + BasicPrice
+			var GasPrice = G * FILE['주택용_주택난방'] * Factor * UnitHeat[i] + BasicPrice
 		}
 		
 		var VAT = GasPrice * 0.1
