@@ -1,14 +1,15 @@
 class Project{
     constructor () {
     this.projName = '1'
-    this.min = undefined
-    this.max = undefined
+    this.min = 0
+    this.max = 0
+    this.gap = 0
     this.interestRatio = undefined
     this.interestSupportRatio = undefined
     this.repaymentPeriod =undefined
     this.holdPeriod =undefined
     this.interestRatio =undefined
-    this.loanAmount = undefined
+    this.loanAmount = 0
     }
 }
 
@@ -38,7 +39,7 @@ export class greenRemodelingInterestSupportProject extends Project  {
             this.min = 0
             this.max = 0
         }
-        
+        this.loanAmount = this.min
         this.gap = this.max - this.min
 
         // set interest ratio
@@ -109,7 +110,7 @@ export class seoulHomeRepairLoanProject extends Project {
             this.min = 0
             this.max = 0
         }
-
+        this.loanAmount = this.min
         this.gap = this.max - this.min
 
         // set interest ratio and repayment ratio
@@ -151,7 +152,7 @@ export class ruralHousingImrpoveProject extends Project {
             this.min = 0
             this.max = 0
         }
-        
+        this.loanAmount = this.min
         this.gap = this.max - this.min
     }
 }
@@ -172,7 +173,7 @@ export class mortageLoanProject extends Project {
             this.min = 0
             this.max = 0
         }
-
+        this.loanAmount = this.min
         this.gap = this.max - this.min
     }
 }
@@ -193,7 +194,7 @@ export class creditLoanProject extends Project {
             this.min = 0
             this.max = 0
         }
-        
+        this.loanAmount = this.min
         this.gap = this.max - this.min
     }
 }

@@ -30,33 +30,33 @@ var LCCAssumptionInput = {
 var remodelingTechInput = {
     "wall": {
         "name": ["외단열 덧댐시공", "외단열 덧댐시공"], 
-        "size": [1, 1], //m2
-        "material cost": [1000000, 1000000]
+        "size": [100, 100], //m2
+        "material cost": [100, 100]
     },
     "roof": {
         "name": ["외단열 덧댐시공"], 
-        "size": [1], //m2
-        "material cost": [1000000] 
+        "size": [100], //m2
+        "material cost": [1000] 
     },
     "window": {
         "name": ["창호 교체"],
-        "size": [1], //m2
-        "material cost": [1000000] 
+        "size": [100], //m2
+        "material cost": [1000] 
     },
     "heatpump": {
         "name": ["EHP"],
         "size": [1], //EA
-        "material cost": [1000000]
+        "material cost": [1000]
     },
     "light": {
         "name": ["LED 전면 교체"],
         "size": [1], //m2
-        "material cost": [1000000]
+        "material cost": [1000]
     },
     "renewable": {
         "name": ["태양광 시스템"],
         "size": [1], //kW
-        "material cost": [1000000]
+        "material cost": [1000]
     },
     "package": {
         "name": ["단열방화도어"],
@@ -76,10 +76,10 @@ var detailedFundInformationInput = {
     'creditLoanHoldMonth': 0, //신용대출 거치기간 (기본값 = 0)
 
     'applyGreen': true, // 그린리모델링 이자지원 사업을 적용하는 경우 true, 아닌 경우 false
-    'applySeoul': false, // 서울시 집수리 융자사업을 적용하는 경우 true, 아닌 경우 false
+    'applySeoul': true, // 서울시 집수리 융자사업을 적용하는 경우 true, 아닌 경우 false
     'applyRural': false, // 농어촌 주택개량사업을 적용하는 경우 true, 아닌 경우 false
     'applyMortage': true, // 주택담보대출을 적용하는 경우 true, 아닌 경우 false
-    'applyCredit': false, // 신용대출을 적용하는 경우 true, 아닌 경우 false
+    'applyCredit': true, // 신용대출을 적용하는 경우 true, 아닌 경우 false
 
     'initialUserCapital': 0 // 개인자본 (B6)
 }

@@ -94,4 +94,10 @@ var GPRICE_BEFORE = gasCostCalculate(monthlyGasInput.before, updatedUserInput )
 var GPRICE_AFTER = gasCostCalculate(monthlyGasInput.after, updatedUserInput )
 var gasNPV = NPVcalculate(GPRICE_BEFORE - GPRICE_AFTER, LCCAssumptionInput.realInterest, LCCAssumptionInput.analysisPeriod)
 
+// round the output 1000KRW
+totalInitialCost = Math.round(totalInitialCost/1000)*1000
+techNPV = Math.round(techNPV/1000)*1000
+electricityNPV = Math.round(electricityNPV/1000)*1000
+gasNPV = Math.round(gasNPV/1000)*1000
+
 export {totalInitialCost, techNPV, electricityNPV, gasNPV}

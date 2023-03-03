@@ -51,8 +51,4 @@ function updateUserInput(userInput) {
 import { userInput } from "../controllers/client_input.js";
 var updatedUserInput = updateUserInput(userInput)
 
-// calculate totalRemodelingCost [DO]
-// import { totalRemodelingCost } from "../services/calculateCostLogics.js"
-// userData.totalRemodelingCost = totalRemodelingCost(TechnologyData)
-
 export { updatedUserInput }
