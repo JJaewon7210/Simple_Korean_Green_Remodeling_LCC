@@ -94,10 +94,29 @@ var GPRICE_BEFORE = gasCostCalculate(monthlyGasInput.before, updatedUserInput )
 var GPRICE_AFTER = gasCostCalculate(monthlyGasInput.after, updatedUserInput )
 var gasNPV = NPVcalculate(GPRICE_BEFORE - GPRICE_AFTER, LCCAssumptionInput.realInterest, LCCAssumptionInput.analysisPeriod)
 
-// round the output 1000KRW
-totalInitialCost = Math.round(totalInitialCost/1000)*1000
-techNPV = Math.round(techNPV/1000)*1000
-electricityNPV = Math.round(electricityNPV/1000)*1000
-gasNPV = Math.round(gasNPV/1000)*1000
+// round the output 1000 KRW
+totalWallCashFlow = Math.round(totalWallCashFlow / 1000) * 1000
+totalRoofCashFlow = Math.round(totalRoofCashFlow / 1000) * 1000
+totalWindowCashFlow = Math.round(totalWindowCashFlow / 1000) * 1000
+totalHeatpumpCashFlow = Math.round(totalHeatpumpCashFlow / 1000) * 1000
+totalLightCashFlow = Math.round(totalLightCashFlow / 1000) * 1000
+totalRenewableCashFlow = Math.round(totalRenewableCashFlow / 1000) * 1000
+totalPackageCashFlow = Math.round(totalPackageCashFlow / 1000) * 1000
 
-export {totalInitialCost, techNPV, electricityNPV, gasNPV}
+initialCostWall = Math.round(initialCostWall / 1000) * 1000
+initialCostRoof = Math.round(initialCostRoof / 1000) * 1000
+initialCostWindow = Math.round(initialCostWindow / 1000) * 1000
+initialCostHeatpump = Math.round(initialCostHeatpump / 1000) * 1000
+initialCostLight = Math.round(initialCostLight / 1000) * 1000
+initialCostRenewable = Math.round(initialCostRenewable / 1000) * 1000
+initialCostPackage = Math.round(initialCostPackage / 1000) * 1000
+
+totalInitialCost = Math.round(totalInitialCost / 1000) * 1000
+techNPV = Math.round(techNPV / 1000) * 1000
+electricityNPV = Math.round(electricityNPV / 1000) * 1000
+gasNPV = Math.round(gasNPV / 1000) * 1000
+
+export {
+	totalWallCashFlow, totalRoofCashFlow, totalWindowCashFlow, totalHeatpumpCashFlow, totalLightCashFlow, totalRenewableCashFlow, totalPackageCashFlow,
+	initialCostWall, initialCostRoof, initialCostWindow, initialCostHeatpump, initialCostLight, initialCostRenewable, initialCostPackage,
+	totalInitialCost, techNPV, electricityNPV, gasNPV}
