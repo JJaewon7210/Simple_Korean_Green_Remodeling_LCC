@@ -1,11 +1,4 @@
-/** 
- * @param {int} loanAmount 한 사업에서 대출한 금액 (그린리모델링 이자지원사업, 서울시 집수리, 농어촌, 주택담보, 신용대출)
- * @param {float} interestRatio 이자율
- * @param {float} interestSupportRatio 이자지원율
- * @param {int} repaymentPeriod 상환기간
- * @param {int} holdPeriod 거치기간
- * @return {Array} 연도별 상환할 금액을 반환
- * **/
+
 export function loanCalculate(loanAmount, interestRatio, interestSupportRatio, repaymentPeriod, holdPeriod) {
 	
 	if (interestRatio > interestSupportRatio) {
@@ -48,12 +41,6 @@ export function loanCalculate(loanAmount, interestRatio, interestSupportRatio, r
 	return yearPayments
 }
 
-/** 
- * @param {Array | number} yearPayments 연도별 금액 (Array). 단일 값(number)으로 들어오면 뒤에 year변수를 같이 입력해주세요.
- * @param {number} realInterest 실질할인율
- * @param {number} year yearPayments가 단일 값(number)라면 해당 년도만큼 복사되어서 계산됩니다. 
- * @return {int} 실질할인율을 따져서 순현재가치 (NPV) 로 변환된 금액을 반환
- * **/
 export function NPVcalculate (yearPayments, realInterest , year){
 	if (typeof (yearPayments) == 'number') {
 		var NPV = 0
@@ -73,14 +60,6 @@ export function NPVcalculate (yearPayments, realInterest , year){
 	}
 }
 
-/** 
- * @param {string} buildingType 건물유형 '비주거', '주거-단독', '주거-다중', '주거-다가구', '주거-다세대', '주거-연립', 
- * @param {Array} monthElectricities 월간 전기사용량이 담겨 있는 12칸 짜리 Array 
- * @param {string} E_distinct 전기계약 구분 'Residential', 'Basic GAB 1', 'Basic GAB 2', 'Basic ULL', 
- * @param {string} E_pressure 전기계약 전압 'high pressure', 'low pressure' , 'high pressure A', 'high pressure B', 'high pressure C'
- * @param {string} E_select 전기계약 선택 'select 1', 'select 2', 'select 3'
- * @return {int} 연간 사용한 전기에 대한 총 금액을 반환
- * **/
 export function electricityCostCalculate(buildingType, monthElectricities, E_distinct, E_pressure, E_select ) {
 	if (buildingType == '비주거') {
 		var yearPayments = nonResidentialElectricityCalculate(monthElectricities, E_distinct, E_pressure, E_select)
@@ -90,7 +69,6 @@ export function electricityCostCalculate(buildingType, monthElectricities, E_dis
 	return yearPayments
 }
 
-import { ElectricityJSON } from '../files/Electricity.js'
 export function residentialElectricityCalculate(monthElectricities, E_distinct, E_pressure, E_select) {
 	const FILE = ElectricityJSON[E_distinct][E_pressure]
 
@@ -180,13 +158,6 @@ export function nonResidentialElectricityCalculate(monthElectricities, E_distinc
 	return yearElectricityPayment
 }
 
-/** 
- * @param {string} buildingType 건물유형 '비주거', '주거-단독', '주거-다중', '주거-다가구', '주거-다세대', '주거-연립' 
- * @param {Array} monthGas 월간 가스사용량이 담겨 있는 12칸 짜리 Array 
- * @param {string} city 거주중인 도시 및 지역 
- * @return {int} 연간 사용한 가스에 대한 총 금액을 반환
- * **/
- import { GasJSON } from '../files/Gas.js'
 export function gasCostCalculate(buildingType,monthGas,city ) {
 	
 	const FILE = GasJSON[city]
@@ -221,7 +192,7 @@ export function gasCostCalculate(buildingType,monthGas,city ) {
 }
 
 import {} from '../configs/greenyPriceDB.js'
-export function getAnnualCashFlowsOfWallRoofWindow(cls, techName, size, userInput, LCCAssumptionInput) {
+export function getAnnualCashFlowsOfWallRoofWindow(techName, size, userInput, analysisPeriod) {
 
 	if (cls === 'wall' || 'roof') {
 		const filteredInfos = GreenyDB.filter(
@@ -240,10 +211,17 @@ export function getAnnualCashFlowsOfWallRoofWindow(cls, techName, size, userInpu
 	} else {
 		throw new Error('Could not find the information from database. This is due to set wrong filter or set wrong cls.')
 	}
+
+	let repairRatio = filteredInfos['수선율']
+	let repairCycle = filteredInfos['수선주기']
+	let replacementCycle = filteredInfos['교체주기']
+	let materialRatio = filteredInfos['재료비비율']
+	let initialCost = filteredInfos[userInput.areaCateogry] * size * (1 - materialRatio) + materialCost
+
+	return getAnnualCashFlows(repairRatio, repairCycle, replacementCycle, analysisPeriod, initialCost)
 }
 
-
-export function getAnnualCashFlowsOfWallRoof(cls, techName, size, userInput, analysisPeriod, materialCost) {
+export function getAnnualCashFlowsOfWallRoof(techName, size, userInput, analysisPeriod, materialCost) {
 	let filteredInfos = GreenyDB.filter(
 		obj => obj["용도"] === buildingTypeBigCategory
 		&& obj["부위"] === techClass
@@ -261,7 +239,7 @@ export function getAnnualCashFlowsOfWallRoof(cls, techName, size, userInput, ana
 	return getAnnualCashFlows(repairRatio, repairCycle, replacementCycle, analysisPeriod, initialCost)
 }
 
-export function getAnnualCashFlowsOfWindow(cls, techName, size, userInput, analysisPeriod, materialCost) {
+export function getAnnualCashFlowsOfWindow(techName, size, userInput, analysisPeriod, materialCost) {
 	let filteredInfos = GreenyDB.filter(
 		obj => obj["용도"] === buildingTypeBigCategory
 		&& obj["부위"] === techClass
@@ -278,7 +256,7 @@ export function getAnnualCashFlowsOfWindow(cls, techName, size, userInput, analy
 	return getAnnualCashFlows(repairRatio, repairCycle, replacementCycle, analysisPeriod, initialCost)
 }
 
-export function getAnnualCashFlowsOfLight(cls, techName, size, userInput, analysisPeriod, materialCost) {
+export function getAnnualCashFlowsOfLight(techName, size, userInput, analysisPeriod, materialCost) {
 	if (size <= 46) {
 		let _costLinearRegession = [10900, 152600]
 	} else if (size > 46 && size <= 59) {
@@ -308,6 +286,37 @@ export function getAnnualCashFlowsOfLight(cls, techName, size, userInput, analys
 	return getAnnualCashFlows(repairRatio, repairCycle, replacementCycle, analysisPeriod, initialCost)
 }
 
+export function getAnnualCashFlowsOfRenewable(techName, size, userInput, analysisPeriod, materialCost) {
+
+	let filteredInfos = GreenyDB.filter(
+		obj => obj["부위"] === techClass
+			&& obj["개선시나리오"] === techName);
+
+	let repairRatio = filteredInfos['수선율']
+	let repairCycle = filteredInfos['수선주기']
+	let replacementCycle = filteredInfos['교체주기']
+	let materialRatio = filteredInfos['재료비비율']
+	let initialCost = filteredInfos['가격'] * size * (1 - materialRatio) + materialCost
+
+	return getAnnualCashFlows(repairRatio, repairCycle, replacementCycle, analysisPeriod, initialCost)
+}
+
+export function getAnnualCashFlowsOfHeatpump(techName, size, userInput, analysisPeriod, materialCost) {
+
+	let filteredInfos = GreenyDB.filter(
+		obj => obj["부위"] === techClass
+			&& obj["개선시나리오"] === techName);
+
+	let repairRatio = filteredInfos['수선율']
+	let repairCycle = filteredInfos['수선주기']
+	let replacementCycle = filteredInfos['교체주기']
+	let materialRatio = filteredInfos['재료비비율']
+	let _cost = filteredInfos['기울기'] * size + filteredInfos['절편값']
+	let initialCost = _cost * (1 - materialRatio) + materialCost
+
+	return getAnnualCashFlows(repairRatio, repairCycle, replacementCycle, analysisPeriod, initialCost)
+}
+
 function getAnnualCashFlows(repairRatio, repairCycle, replacementCycle, analysisPeriod, initialCost) {
 	var annualCashFlow = 0
 	var annualCashFlows = []
@@ -331,8 +340,6 @@ function getAnnualCashFlows(repairRatio, repairCycle, replacementCycle, analysis
 	}
 	return annualCashFlows
 }
-
-
 
 export function totalRemodelingCost(TechnologyData) {
 	const technologyClsList = ['외벽', '창호', '공조', '냉난방', '조명', '전기', '신재생']

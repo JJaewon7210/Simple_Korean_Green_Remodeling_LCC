@@ -29,32 +29,38 @@ var LCCAssumptionInput = {
 
 var remodelingTechInput = {
     "wall": {
-        "name": ["외단열 덧댐시공"], // 기술명
-        "size": [84] //726 //m2 값
+        "name": ["외단열 덧댐시공"], 
+        "size": [84], //m2
+        "material cost": [1000000]
     },
     "roof": {
-        "name": ["외단열 덧댐시공"], // 기술명
-        "size": [84] //726 //m2 값
+        "name": ["외단열 덧댐시공"], 
+        "size": [84], //m2
+        "material cost": [1000000] 
     },
     "window": {
-        "name": ["창호 교체"],// 기술명
-        "size": [21] //236.590504 //m2 값
+        "name": ["창호 교체"],
+        "size": [21], //m2
+        "material cost": [1000000] 
     },
     "heatpump": {
-        "name": ["EHP"],// 기술명
-        "size": [0] //m2 값
+        "name": ["EHP"],
+        "size": [0], //EA
+        "material cost": [1000000]
     },
     "light": {
-        "name": ["LED 전면 교체"],// 기술명
-        "size": [0] //EA 값
+        "name": ["LED 전면 교체"],
+        "size": [0], //EA
+        "material cost": [1000000]
     },
     "renewable": {
-        "name": ["태양광 시스템"],// 기술명
-        "size": [0] // kW 값
+        "name": ["태양광 시스템"],
+        "size": [0], //kW
+        "material cost": [1000000]
     },
     "package": {
-        "name": ["단열방화도어"],// 기술명
-        "size": [0] // kW 값
+        "name": ["단열방화도어"],
+        "size": [0] //various 
     }
 }
 

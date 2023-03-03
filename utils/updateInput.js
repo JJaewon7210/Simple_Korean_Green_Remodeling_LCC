@@ -6,34 +6,7 @@ function updateUserInput(userInput) {
         userInput.buildiygTypeBigCategory = '주거'
     }
 
-    // filter 02. class (or category?) of the remodeling technology
-    switch (cls) {
-        case 'wall':
-            userInput.techClass = '벽체'
-            break;
-        case 'roof':
-            userInput.techClass = '지붕'
-            break;
-        case 'window':
-            userInput.techClass = '창호'
-            break;
-        case 'heatpump':
-            userInput.techClass = '냉난방'
-            break;
-        case 'light':
-            userInput.techClass = '조명기기'
-            break;
-        case 'renewable':
-            userInput.techClass = '신재생'
-            break;
-        case 'package':
-            userInput.techClass = '기술패키지'
-            break;
-        default:
-            break;
-    }
-
-    // filter 03. Get Building Age cateogry
+    // filter 02. Get Building Age cateogry
     if (userInput.approvalYear <= 1980) {
         userInput.buildingAge = '~1980년'
     } else if (userInput.approvalYear > 1980 && userInput.approvalYear <= 1987) {
@@ -46,7 +19,7 @@ function updateUserInput(userInput) {
         throw new Error('Wrong approvalYear was entered to userInput.')
     }
 
-    // filter 04. Get area category from cities 
+    // filter 03. Get area category from cities 
     let middle01Cities = [
         '강원 춘천', '강원 원주', '강원 평창',
         '경기(연천, 포천, 가평, 남양주, 의정부, 양주, 동두천, 파주)']
