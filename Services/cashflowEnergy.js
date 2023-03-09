@@ -1,5 +1,5 @@
 import { electricityResidentalPriceDB, electricityIndustrialPriceDB } from "../configs/electricityPriceDB.js"
-import { gasPriceDB } from "../configs/gasPriceDB.js";
+import { gasPriceDB, UnitHeat } from "../configs/gasPriceDB.js";
 
 export function electricityCostCalculate( montlyElectricityConsumption, userInput, energyContract) {
 	if (userInput.buildingType == '비주거') {
@@ -102,8 +102,6 @@ export function gasCostCalculate(monthlyGasConsumption, userInput) {
 	
 	const FILE = gasPriceDB.filter(
 		obj => obj["지역"] == userInput.city)[0];
-
-	const UnitHeat = [43.028, 42.398, 42.65, 42.719, 42.681, 42.539, 42.573, 42.413, 42.5, 42.842, 42.802, 42.716]
 	const BasicPrice = FILE['주택용_기본요금']
 	const Factor = 0.998
 	
