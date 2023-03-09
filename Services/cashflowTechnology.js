@@ -5,6 +5,7 @@ import { lightDB } from '../configs/lightDB.js'
 import { renewableDB } from '../configs/renewableDB.js'
 import { heatpumpDB } from '../configs/heatpumpDB.js'
 import { packageDB } from '../configs/packageDB.js'
+import { PPI } from '../configs/PPI.js'
 
 function getAnnualCashFlowsOfWall(techName, size, userInput, analysisPeriod, materialCost) {
 
@@ -196,19 +197,6 @@ function getAnnualCashFlows(repairRatio, repairCycle, replacementCycle, analysis
 }
 
 function reflectInflation (estimatedYear) {
-	// production price index 2013 ~ 2022
-	const PPI = {
-		2013: 104.74,
-		2014: 104.18,
-		2015: 100.00,
-		2016: 98.18,
-		2017: 101.57,
-		2018: 103.48,
-		2019: 103.50,
-		2020: 103.03,
-		2021: 109.60,
-		2022: 118.78,
-	}
 
 	let inflationRatio = PPI[2022] / PPI[estimatedYear]
 
