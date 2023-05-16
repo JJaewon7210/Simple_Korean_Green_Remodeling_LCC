@@ -197,9 +197,9 @@ function getAnnualCashFlows(repairRatio, repairCycle, replacementCycle, analysis
 }
 
 function reflectInflation (estimatedYear) {
-
-	let inflationRatio = PPI[2022] / PPI[estimatedYear]
-
+	const ppi2022 = PPI.find(item => item.year === 2022);
+	const ppi20xx = PPI.find(item => item.year === estimatedYear);
+	let inflationRatio = ppi2022.value / ppi20xx.value
 	return inflationRatio
 }
 
