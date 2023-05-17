@@ -10,11 +10,10 @@ import { doorDB } from '../configs/doorDB.js'
 import { freezerDB } from '../configs/freezerDB.js'
 import { boilerDB } from '../configs/boilerDB.js'
 import { AHUDB } from '../configs/AHUDB.js'
-
 import { heatpumpDB } from '../configs/heatpumpDB.js'
 import { packageDB } from '../configs/packageDB.js'
 import { PPI } from '../configs/PPI.js'
-
+// 1. 벽체
 function getAnnualCashFlowsOfWall(techName, size, userInput, analysisPeriod, materialCost) {
 
 	if (
@@ -56,7 +55,7 @@ function getAnnualCashFlowsOfWall(techName, size, userInput, analysisPeriod, mat
 	}
 
 }
-
+// 2. 지붕
 function getAnnualCashFlowsOfRoof(techName, size, userInput, analysisPeriod, materialCost) {
 	if (
 		techName === "옥상 외단열외방수"
@@ -93,7 +92,7 @@ function getAnnualCashFlowsOfRoof(techName, size, userInput, analysisPeriod, mat
 		return getAnnualCashFlows(repairRatio, repairCycle, replacementCycle, analysisPeriod, initialCost)
 	}
 }
-
+// 3. 바닥
 function getAnnualCashFlowsOfFloor(techName, size, userInput, analysisPeriod, materialCost) {
 
 	let filteredInfos = floorDB.filter(
@@ -112,7 +111,7 @@ function getAnnualCashFlowsOfFloor(techName, size, userInput, analysisPeriod, ma
 
 	return getAnnualCashFlows(repairRatio, repairCycle, replacementCycle, analysisPeriod, initialCost)
 }
-
+// 4. 창문
 function getAnnualCashFlowsOfWindow(techName, size, userInput, analysisPeriod, materialCost) {
 	if (
 		techName === "고단열고기밀 창호"
@@ -148,7 +147,7 @@ function getAnnualCashFlowsOfWindow(techName, size, userInput, analysisPeriod, m
 		return getAnnualCashFlows(repairRatio, repairCycle, replacementCycle, analysisPeriod, initialCost)
 	}
 }
-
+// 5. 조명
 function getAnnualCashFlowsOfLight(techName, size, userInput, analysisPeriod) {
 	let _costLinearRegession;
 	if (size <= 46) {
@@ -181,7 +180,7 @@ function getAnnualCashFlowsOfLight(techName, size, userInput, analysisPeriod) {
 	
 	return getAnnualCashFlows(repairRatio, repairCycle, replacementCycle, analysisPeriod, initialCost)
 }
-
+// 6. 내부차장
 function getAnnualCashFlowsOfInteriorBlind(techName, size, analysisPeriod, materialCost) {
 
 	let filteredInfos = interiorBlindDB.filter(
@@ -196,7 +195,7 @@ function getAnnualCashFlowsOfInteriorBlind(techName, size, analysisPeriod, mater
 	
 	return getAnnualCashFlows(repairRatio, repairCycle, replacementCycle, analysisPeriod, initialCost)
 }
-
+// 7. 외부차양
 function getAnnualCashFlowsOfExteriorBlind(techName, size, analysisPeriod) {
 
 	let filteredInfos = exteriorBlindDB.filter(
@@ -212,7 +211,7 @@ function getAnnualCashFlowsOfExteriorBlind(techName, size, analysisPeriod) {
 	
 	return getAnnualCashFlows(repairRatio, repairCycle, replacementCycle, analysisPeriod, initialCost)
 }
-
+// 8. 태양광
 function getAnnualCashFlowsOfRenewable(techName, size, analysisPeriod) {
 
 	let filteredInfos = renewableDB.filter(
@@ -228,7 +227,7 @@ function getAnnualCashFlowsOfRenewable(techName, size, analysisPeriod) {
 
 	return getAnnualCashFlows(repairRatio, repairCycle, replacementCycle, analysisPeriod, initialCost)
 }
-
+// 9. 출입문
 function getAnnualCashFlowsOfDoor(techName, size, analysisPeriod, materialCost) {
 	if (
 		techName === "단열방화도어"
@@ -261,7 +260,7 @@ function getAnnualCashFlowsOfDoor(techName, size, analysisPeriod, materialCost) 
 		return getAnnualCashFlows(repairRatio, repairCycle, replacementCycle, analysisPeriod, initialCost)
 	}
 }
-
+// 10. 냉동기
 function getAnnualCashFlowsOfFreezer(size, analysisPeriod) {
 
 	let filteredInfos = freezerDB.filter(
@@ -277,7 +276,7 @@ function getAnnualCashFlowsOfFreezer(size, analysisPeriod) {
 
 	return getAnnualCashFlows(repairRatio, repairCycle, replacementCycle, analysisPeriod, initialCost)
 }
-
+// 11. 보일러
 function getAnnualCashFlowsOfBoiler(techName, size, analysisPeriod, materialCost) {
 
 	let filteredInfos = boilerDB.filter(
@@ -312,7 +311,7 @@ function getAnnualCashFlowsOfBoiler(techName, size, analysisPeriod, materialCost
 		return getAnnualCashFlows(repairRatio, repairCycle, replacementCycle, analysisPeriod, initialCost)
 	}
 }
-
+// 12. 공조기
 function getAnnualCashFlowsOfAHU(size, analysisPeriod, materialCost) {
 
 	let filteredInfos = AHUDB.filter(
@@ -328,7 +327,7 @@ function getAnnualCashFlowsOfAHU(size, analysisPeriod, materialCost) {
 
 	return getAnnualCashFlows(repairRatio, repairCycle, replacementCycle, analysisPeriod, initialCost)
 }
-
+// 13. 히트펌프
 function getAnnualCashFlowsOfHeatpump(size, analysisPeriod, materialCost) {
 
 	let filteredInfos = heatpumpDB.filter(
@@ -341,46 +340,6 @@ function getAnnualCashFlowsOfHeatpump(size, analysisPeriod, materialCost) {
 	let estimatedYear = filteredInfos['견적연도']
 	let unitCost = (materialCost + filteredInfos['노무비']) * reflectInflation(estimatedYear)
 	let initialCost = unitCost * size
-
-	return getAnnualCashFlows(repairRatio, repairCycle, replacementCycle, analysisPeriod, initialCost)
-}
-
-function getAnnualCashFlowsOfPackage(techName, size, userInput, analysisPeriod) {
-
-	let filteredInfos;			
-	if (techName === '외단열 하이패브시스템') {
-		filteredInfos = packageDB.filter(
-			obj => obj["개선시나리오"] === techName
-				&& obj["개선기준"] === '군자동 내역서'
-				&& obj["개선재료"] === '복합보드')[0];
-
-	} else if (techName === '옥상 외단열외방수') {
-		filteredInfos = packageDB.filter(
-			obj => obj["개선시나리오"] === techName
-				&& obj["개선기준"] === '군자동 내역서')[0];
-
-	} else if (techName === '단열방화도어') {
-		filteredInfos = packageDB.filter(
-			obj => obj["개선시나리오"] === techName
-				&& obj["개선기준"] === '군자동 내역서')[0];
-	
-	} else if (techName === '고단열고기밀 창호') {
-		filteredInfos = packageDB.filter(
-			obj => obj["개선시나리오"] === techName
-				&& obj["개선기준"] === '군자동 내역서')[0];
-
-	} else if (techName === '스마트배선시스템 (PC 공법)') {
-		filteredInfos = packageDB.filter(
-			obj => obj["개선시나리오"] === techName)[0];
-	} else {
-		throw new Error('Could not find the information from database. This may be due to define wrong techName.')
-	}
-
-	let repairRatio = filteredInfos['수선율']
-	let repairCycle = filteredInfos['수선주기']
-	let replacementCycle = filteredInfos['교체주기']
-	let estimatedYear = filteredInfos['견적연도']
-	let initialCost = filteredInfos['가격'] * reflectInflation(estimatedYear) * size
 
 	return getAnnualCashFlows(repairRatio, repairCycle, replacementCycle, analysisPeriod, initialCost)
 }
@@ -420,20 +379,15 @@ export {
 	getAnnualCashFlowsOfWall, 
 	getAnnualCashFlowsOfRoof, 
 	getAnnualCashFlowsOfFloor,
-	
 	getAnnualCashFlowsOfWindow, 
 	getAnnualCashFlowsOfLight, 
-
 	getAnnualCashFlowsOfInteriorBlind,
 	getAnnualCashFlowsOfExteriorBlind,
-
 	getAnnualCashFlowsOfRenewable,
 	getAnnualCashFlowsOfDoor,
 	getAnnualCashFlowsOfFreezer,
 	getAnnualCashFlowsOfBoiler,
 	getAnnualCashFlowsOfAHU,
-
 	getAnnualCashFlowsOfHeatpump, 
-
 	getAnnualCashFlowsOfPackage
 }
