@@ -66,7 +66,7 @@ var totalLightCashFlow = 0
 var initialCostLight = 0
 if (remodelingTechInput.light.size.length > 0) {
 	for (let i = 0; i < remodelingTechInput.light.size.length; i++) {
-		let lightCashFlows = getAnnualCashFlowsOfLight(remodelingTechInput.light.name[i], remodelingTechInput.light.size[i], updatedUserInput , LCCAssumptionInput.analysisPeriod)
+		let lightCashFlows = getAnnualCashFlowsOfLight(remodelingTechInput.light.size[i], LCCAssumptionInput.analysisPeriod)
 		initialCostLight += lightCashFlows[0]
 		totalLightCashFlow += NPVcalculate(lightCashFlows, LCCAssumptionInput.realInterest, LCCAssumptionInput.analysisPeriod)
 	}

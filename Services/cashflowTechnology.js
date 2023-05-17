@@ -147,7 +147,7 @@ function getAnnualCashFlowsOfWindow(techName, size, userInput, analysisPeriod, m
 	}
 }
 // 5. 조명
-function getAnnualCashFlowsOfLight(techName, size, userInput, analysisPeriod) {
+function getAnnualCashFlowsOfLight(size, analysisPeriod) {
 	let _costLinearRegession;
 	if (size <= 46) {
 		_costLinearRegession = [10900, 152600]
@@ -160,9 +160,8 @@ function getAnnualCashFlowsOfLight(techName, size, userInput, analysisPeriod) {
 	}
 
 	let filteredInfos = lightDB.filter(
-		obj => obj["용도"] === userInput.buildingTypeBigCategory
-		&& obj["개선기준"] === '형광등'
-		&& obj["개선시나리오"] === techName)[0];
+		obj => obj["개선기준"] === '형광등'
+			&& obj["개선시나리오"] === 'LED 전면 교체')[0];
 	
 	let _cost = _costLinearRegession[0] * size + _costLinearRegession[1]
 
@@ -278,7 +277,7 @@ function getAnnualCashFlowsOfBoiler(techName, size, analysisPeriod, materialCost
 	
 	if (Object.keys(filteredInfos).length === 0) {
 		let filteredInfos = boilerDB.filter(
-			obj => obj["상업용 냉동기"] === techName)[0];
+			obj => obj["상업용 보일러"] === techName)[0];
 
 		let repairRatio = filteredInfos['수선율']
 		let repairCycle = filteredInfos['수선주기']
@@ -288,7 +287,9 @@ function getAnnualCashFlowsOfBoiler(techName, size, analysisPeriod, materialCost
 		
 		let initialCost;
 		if (Number.isInteger(materialCost)) {
-			initialCost = materialCost * (1/materialRatio)
+			initialCost = materialCost * (1 / materialRatio)
+		} else if (Number.isFinite(materialCost)) {
+			initialCost = materialCost * (1 / materialRatio)
 		} else {
 			initialCost = filteredInfos['시공비'] * reflectInflation(estimatedYear) * size
 		}
@@ -330,7 +331,6 @@ function getAnnualCashFlowsOfHeatpump(size, analysisPeriod, materialCost) {
 	let repairRatio = filteredInfos['수선율']
 	let repairCycle = filteredInfos['수선주기']
 	let replacementCycle = filteredInfos['교체주기']
-	let materialRatio = filteredInfos['재료비비율']
 	let estimatedYear = filteredInfos['견적연도']
 	let unitCost = (materialCost + filteredInfos['노무비']) * reflectInflation(estimatedYear)
 	let initialCost = unitCost * size

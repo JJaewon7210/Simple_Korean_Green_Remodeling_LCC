@@ -30,80 +30,79 @@ var LCCAssumptionInput = {
 var remodelingTechInput = {
     // 1. 벽체
     "wall": {
-        "name": ["외단열 덧댐시공", "외단열 덧댐시공"], 
-        "size": [100, 100], //m2
-        "material cost": [100, 100]
+        "name": ['외단열 덧댐시공', '외단열 덧댐시공', '외단열 덧댐시공', '외단열 덧댐시공'], 
+        "size": [80, 120, 80, 120], //m2 벽체면적
+        "material cost": [150, 6000, 150, 6000] //원 단가
     },
     // 2. 지붕
     "roof": {
-        "name": ["외단열 덧댐시공"], 
-        "size": [100], //m2
-        "material cost": [1000] 
+        "name": [], 
+        "size": [], //m2 지붕면적
+        "material cost": [] //원 단가
     },
     // 3. 바닥
     "floor": {
         "name": ["내단열 덧댐시공"], 
-        "size": [100], //m2
-        "material cost": [1000] 
+        "size": [120], //m2 바닥면적
+        "material cost": [30400] //원 단가
     },
     // 4. 창문
     "window": {
         "name": ["창호 교체"],
-        "size": [100], //m2
-        "material cost": [1000] 
+        "size": [40], //m2 창호면적
+        "material cost": [174500]  //원 단가
     },
     // 5. 조명
     "light": {
         "name": ["LED 전면 교체"],
-        "size": [10], //m2
-        "material cost": ['']
+        "size": [120], //m2 바닥면적
+
     },
     // 6. 내부차장
     "interiorBlind": {
-        "name": ["내부 베네시안 블라인드"],
-        "size": [10], //m2
-        "material cost": [10000]
+        "name": ['내부 베네시안 블라인드', '롤 블라인드'],
+        "size": [20, 20], //m2
+        "material cost": [11400, 14000]
     },
     //7. 외부차양
     "exteriorBlind": {
         "name": ["외부 베네시안 블라인드"],
-        "size": [10], //m2
-        "material cost": ['']
+        "size": [20], //m2
     },
     // 8. 태양광
     "renewable": {
         "name": ["태양광 시스템"],
-        "size": [3], //kW
+        "size": [3.3], //kW
     },
     // 9. 출입문
     "door": {
-        "name": ["강화문"],
+        "name": ["철재문 (양개)"],
         "size": [1], // 짝
         "material cost": [450000]
     },
     // 10. 냉동기
     "freezer": {
 
-        "size": [80], // USRT
-        "material cost": ['']
+        "size": [90], // USRT
+
     },
     // 11. 보일러
     "boiler": {
         "name": ["NPW-36KD"],
-        "size": [10000], // kW
+        "size": [36000], // kcal/h
         "material cost": ['']
     },
     // 12. 공조기
     "AHU": {
 
-        "size": [1], // 대
-        "material cost": [10000]
+        "size": [], // 대
+        "material cost": []
     },
     // 13. 히트펌프
     "heatpump": {
 
         "size": [1], // 대
-        "material cost": [10000]
+        "material cost": [4860900]
     },
 }
 

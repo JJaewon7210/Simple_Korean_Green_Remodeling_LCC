@@ -26,7 +26,7 @@ const userInputSchema = Joi.object({
 });
 
 const energyContractSchema = Joi.object({
-    distinct: Joi.string().valid('일반용갑1', '일반용갑2', '산업용갑1', '산업용갑2', '교육용갑', '교육용을', '일반용을').required(),
+    distinct: Joi.string().valid('주택용','일반용갑1', '일반용갑2', '산업용갑1', '산업용갑2', '교육용갑', '교육용을', '일반용을').required(),
     pressure: Joi.string()
         .when('distinct', { is: '주택용',    then: Joi.string().valid('저압', '고압').required() })
         .when('distinct', { is: '일반용갑1', then: Joi.string().valid('저압', '고압A', '고압B').required() })
