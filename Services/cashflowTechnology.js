@@ -95,7 +95,8 @@ function getAnnualCashFlowsOfLight(techName, size, userInput, analysisPeriod, ma
 	let replacementCycle = filteredInfos['교체주기']
 	let materialRatio = filteredInfos['재료비비율']
 	let estimatedYear = filteredInfos['견적연도']
-	let initialCost = _cost * (1 - materialRatio) * reflectInflation(estimatedYear) + materialCost * size
+	// let initialCost = _cost * (1 - materialRatio) * reflectInflation(estimatedYear) + materialCost * size
+	let initialCost = _cost * reflectInflation(estimatedYear)
 	
 	return getAnnualCashFlows(repairRatio, repairCycle, replacementCycle, analysisPeriod, initialCost)
 }
