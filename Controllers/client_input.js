@@ -28,45 +28,83 @@ var LCCAssumptionInput = {
 }
 
 var remodelingTechInput = {
+    // 1. 벽체
     "wall": {
         "name": ["외단열 덧댐시공", "외단열 덧댐시공"], 
         "size": [100, 100], //m2
         "material cost": [100, 100]
     },
+    // 2. 지붕
     "roof": {
         "name": ["내단열 덧댐시공"], 
         "size": [100], //m2
         "material cost": [1000] 
     },
+    // 3. 바닥
     "floor": {
         "name": ["외단열 덧댐시공"], 
         "size": [100], //m2
         "material cost": [1000] 
     },
+    // 4. 창문
     "window": {
         "name": ["창호 교체"],
         "size": [100], //m2
         "material cost": [1000] 
     },
-    "heatpump": {
-        "name": ["EHP"],
-        "size": [1], //EA
-        "material cost": [1000]
-    },
+    // 5. 조명
     "light": {
         "name": ["LED 전면 교체"],
-        "size": [1], //m2
-        "material cost": [1000]
+        "size": [10], //m2
+        "material cost": ['']
     },
+    // 6. 내부차장
+    "interiorBlind": {
+        "name": ["내부 베네시안 블라인드"],
+        "size": [10], //m2
+        "material cost": [10000]
+    },
+    //7. 외부차양
+    "exteriorBlind": {
+        "name": ["외부 베네시안 블라인드"],
+        "size": [10], //m2
+        "material cost": ['']
+    },
+    // 8. 태양광
     "renewable": {
         "name": ["태양광 시스템"],
-        "size": [1], //kW
-        "material cost": [1000]
+        "size": [3], //kW
     },
-    "package": {
-        "name": ["단열방화도어"],
-        "size": [1] //various 
-    }
+    // 9. 출입문
+    "door": {
+        "name": ["강화문"],
+        "size": [1], // 짝
+        "material cost": [450000]
+    },
+    // 10. 냉동기
+    "freezer": {
+
+        "size": [80], // USRT
+        "material cost": ['']
+    },
+    // 11. 보일러
+    "boiler": {
+        "name": ["NPW-36KD"],
+        "size": [10000], // kW
+        "material cost": ['']
+    },
+    // 12. 공조기
+    "AHU": {
+
+        "size": [1], // 대
+        "material cost": [10000]
+    },
+    // 13. 히트펌프
+    "heatpump": {
+
+        "size": [1], // 대
+        "material cost": [10000]
+    },
 }
 
 var detailedFundInformationInput = {
