@@ -17,16 +17,15 @@ import {
 	getAnnualCashFlowsOfFreezer,
 	getAnnualCashFlowsOfBoiler,
 	getAnnualCashFlowsOfAHU,
-	getAnnualCashFlowsOfHeatpump,
-	getAnnualCashFlowsOfPackage
+	getAnnualCashFlowsOfHeatpump
 } from './cashflowTechnology.js'
 import { electricityCostCalculate, gasCostCalculate } from './cashflowEnergy.js'
 import { NPVcalculate } from './cashflowNPV.js'
 // 1. 벽체
 var totalWallCashFlow = 0
 var initialCostWall = 0
-if (remodelingTechInput.wall.name.length > 0) {
-	for (let i=0; i < remodelingTechInput.wall.name.length; i++) {
+if (remodelingTechInput.wall.size.length > 0) {
+	for (let i=0; i < remodelingTechInput.wall.size.length; i++) {
 		let wallCashFlows = getAnnualCashFlowsOfWall(remodelingTechInput.wall.name[i], remodelingTechInput.wall.size[i], updatedUserInput , LCCAssumptionInput.analysisPeriod, remodelingTechInput.wall['material cost'][i])
 		initialCostWall += wallCashFlows[0]
 		totalWallCashFlow += NPVcalculate(wallCashFlows, LCCAssumptionInput.realInterest, LCCAssumptionInput.analysisPeriod)
@@ -35,8 +34,8 @@ if (remodelingTechInput.wall.name.length > 0) {
 // 2. 지붕
 var totalRoofCashFlow = 0
 var initialCostRoof = 0
-if (remodelingTechInput.roof.name.length > 0) {
-	for (let i = 0; i < remodelingTechInput.roof.name.length; i++) {
+if (remodelingTechInput.roof.size.length > 0) {
+	for (let i = 0; i < remodelingTechInput.roof.size.length; i++) {
 		let roofCashFlows = getAnnualCashFlowsOfRoof(remodelingTechInput.roof.name[i], remodelingTechInput.roof.size[i], updatedUserInput , LCCAssumptionInput.analysisPeriod, remodelingTechInput.roof['material cost'][i])
 		initialCostRoof += roofCashFlows[0]
 		totalRoofCashFlow += NPVcalculate(roofCashFlows, LCCAssumptionInput.realInterest, LCCAssumptionInput.analysisPeriod)
@@ -45,9 +44,9 @@ if (remodelingTechInput.roof.name.length > 0) {
 // 3. 바닥
 var totalFloorCashFlow = 0
 var initialCostFloor = 0
-if (remodelingTechInput.floor.name.length > 0) {
-	for (let i = 0; i < remodelingTechInput.floor.name.length; i++) {
-		let floorCashFlows = getAnnualCashFlowsOffloor(remodelingTechInput.floor.name[i], remodelingTechInput.floor.size[i], updatedUserInput , LCCAssumptionInput.analysisPeriod, remodelingTechInput.floor['material cost'][i])
+if (remodelingTechInput.floor.size.length > 0) {
+	for (let i = 0; i < remodelingTechInput.floor.size.length; i++) {
+		let floorCashFlows = getAnnualCashFlowsOfFloor(remodelingTechInput.floor.name[i], remodelingTechInput.floor.size[i], updatedUserInput , LCCAssumptionInput.analysisPeriod, remodelingTechInput.floor['material cost'][i])
 		initialCostFloor += floorCashFlows[0]
 		totalFloorCashFlow += NPVcalculate(floorCashFlows, LCCAssumptionInput.realInterest, LCCAssumptionInput.analysisPeriod)
 	}
@@ -55,8 +54,8 @@ if (remodelingTechInput.floor.name.length > 0) {
 // 4. 창문
 var totalWindowCashFlow = 0
 var initialCostWindow = 0
-if (remodelingTechInput.window.name.length > 0) {
-	for (let i = 0; i < remodelingTechInput.window.name.length; i++) {
+if (remodelingTechInput.window.size.length > 0) {
+	for (let i = 0; i < remodelingTechInput.window.size.length; i++) {
 		let windowCashFlows = getAnnualCashFlowsOfWindow(remodelingTechInput.window.name[i], remodelingTechInput.window.size[i], updatedUserInput , LCCAssumptionInput.analysisPeriod, remodelingTechInput.window['material cost'][i])
 		initialCostWindow += windowCashFlows[0]
 		totalWindowCashFlow += NPVcalculate(windowCashFlows, LCCAssumptionInput.realInterest, LCCAssumptionInput.analysisPeriod)
@@ -65,8 +64,8 @@ if (remodelingTechInput.window.name.length > 0) {
 // 5. 조명
 var totalLightCashFlow = 0
 var initialCostLight = 0
-if (remodelingTechInput.light.name.length > 0) {
-	for (let i = 0; i < remodelingTechInput.light.name.length; i++) {
+if (remodelingTechInput.light.size.length > 0) {
+	for (let i = 0; i < remodelingTechInput.light.size.length; i++) {
 		let lightCashFlows = getAnnualCashFlowsOfLight(remodelingTechInput.light.name[i], remodelingTechInput.light.size[i], updatedUserInput , LCCAssumptionInput.analysisPeriod)
 		initialCostLight += lightCashFlows[0]
 		totalLightCashFlow += NPVcalculate(lightCashFlows, LCCAssumptionInput.realInterest, LCCAssumptionInput.analysisPeriod)
@@ -75,8 +74,8 @@ if (remodelingTechInput.light.name.length > 0) {
 // 6. 내부차장
 var totalInteriorBlindCashFlow = 0
 var initialCostInteriorBlind = 0
-if (remodelingTechInput.interiorBlind.name.length > 0) {
-	for (let i = 0; i < remodelingTechInput.interiorBlind.name.length; i++) {
+if (remodelingTechInput.interiorBlind.size.length > 0) {
+	for (let i = 0; i < remodelingTechInput.interiorBlind.size.length; i++) {
 		let interiorBlindCashFlows = getAnnualCashFlowsOfInteriorBlind(remodelingTechInput.interiorBlind.name[i], remodelingTechInput.interiorBlind.size[i], LCCAssumptionInput.analysisPeriod, remodelingTechInput.interiorBlind['material cost'][i])
 		initialCostInteriorBlind += interiorBlindCashFlows[0]
 		totalInteriorBlindCashFlow += NPVcalculate(interiorBlindCashFlows, LCCAssumptionInput.realInterest, LCCAssumptionInput.analysisPeriod)
@@ -85,8 +84,8 @@ if (remodelingTechInput.interiorBlind.name.length > 0) {
 //7. 외부차양
 var totalExteriorBlindCashFlow = 0
 var initialCostExteriorBlind = 0
-if (remodelingTechInput.exteriorBlind.name.length > 0) {
-	for (let i = 0; i < remodelingTechInput.exteriorBlind.name.length; i++) {
+if (remodelingTechInput.exteriorBlind.size.length > 0) {
+	for (let i = 0; i < remodelingTechInput.exteriorBlind.size.length; i++) {
 		let exteriorBlindCashFlows = getAnnualCashFlowsOfExteriorBlind(remodelingTechInput.exteriorBlind.name[i], remodelingTechInput.exteriorBlind.size[i], LCCAssumptionInput.analysisPeriod)
 		initialCostExteriorBlind += exteriorBlindCashFlows[0]
 		totalExteriorBlindCashFlow += NPVcalculate(exteriorBlindCashFlows, LCCAssumptionInput.realInterest, LCCAssumptionInput.analysisPeriod)
@@ -95,8 +94,8 @@ if (remodelingTechInput.exteriorBlind.name.length > 0) {
 // 8. 태양광
 var totalRenewableCashFlow = 0
 var initialCostRenewable = 0
-if (remodelingTechInput.renewable.name.length > 0) {
-	for (let i = 0; i < remodelingTechInput.renewable.name.length; i++) {
+if (remodelingTechInput.renewable.size.length > 0) {
+	for (let i = 0; i < remodelingTechInput.renewable.size.length; i++) {
 		let renewableCashFlows = getAnnualCashFlowsOfRenewable(remodelingTechInput.renewable.name[i], remodelingTechInput.renewable.size[i],  LCCAssumptionInput.analysisPeriod)
 		initialCostRenewable += renewableCashFlows[0]
 		totalRenewableCashFlow += NPVcalculate(renewableCashFlows, LCCAssumptionInput.realInterest, LCCAssumptionInput.analysisPeriod)
@@ -105,8 +104,8 @@ if (remodelingTechInput.renewable.name.length > 0) {
 // 9. 출입문
 var totalDoorCashFlow = 0
 var initialCostDoor = 0
-if (remodelingTechInput.door.name.length > 0) {
-	for (let i = 0; i < remodelingTechInput.door.name.length; i++) {
+if (remodelingTechInput.door.size.length > 0) {
+	for (let i = 0; i < remodelingTechInput.door.size.length; i++) {
 		let doorCashFlows = getAnnualCashFlowsOfDoor(remodelingTechInput.door.name[i], remodelingTechInput.door.size[i], LCCAssumptionInput.analysisPeriod, remodelingTechInput.door['material cost'][i])
 		initialCostDoor += doorCashFlows[0]
 		totalDoorCashFlow += NPVcalculate(doorCashFlows, LCCAssumptionInput.realInterest, LCCAssumptionInput.analysisPeriod)
@@ -115,8 +114,8 @@ if (remodelingTechInput.door.name.length > 0) {
 // 10. 냉동기
 var totalFreezerCashFlow = 0
 var initialCostFreezer = 0
-if (remodelingTechInput.freezer.name.length > 0) {
-	for (let i = 0; i < remodelingTechInput.freezer.name.length; i++) {
+if (remodelingTechInput.freezer.size.length > 0) {
+	for (let i = 0; i < remodelingTechInput.freezer.size.length; i++) {
 		let freezerCashFlows = getAnnualCashFlowsOfFreezer(remodelingTechInput.freezer.size[i], LCCAssumptionInput.analysisPeriod)
 		initialCostFreezer += freezerCashFlows[0]
 		totalFreezerCashFlow += NPVcalculate(freezerCashFlows, LCCAssumptionInput.realInterest, LCCAssumptionInput.analysisPeriod)
@@ -125,8 +124,8 @@ if (remodelingTechInput.freezer.name.length > 0) {
 // 11. 보일러
 var totalBoilerCashFlow = 0
 var initialCostBoiler = 0
-if (remodelingTechInput.boiler.name.length > 0) {
-	for (let i = 0; i < remodelingTechInput.boiler.name.length; i++) {
+if (remodelingTechInput.boiler.size.length > 0) {
+	for (let i = 0; i < remodelingTechInput.boiler.size.length; i++) {
 		let boilerCashFlows = getAnnualCashFlowsOfBoiler(remodelingTechInput.boiler.name[i], remodelingTechInput.boiler.size[i], LCCAssumptionInput.analysisPeriod, remodelingTechInput.boiler['material cost'][i])
 		initialCostBoiler += boilerCashFlows[0]
 		totalBoilerCashFlow += NPVcalculate(boilerCashFlows, LCCAssumptionInput.realInterest, LCCAssumptionInput.analysisPeriod)
@@ -135,8 +134,8 @@ if (remodelingTechInput.boiler.name.length > 0) {
 // 12. 공조기
 var totalAHUCashFlow = 0
 var initialCostAHU = 0
-if (remodelingTechInput.AHU.name.length > 0) {
-	for (let i = 0; i < remodelingTechInput.AHU.name.length; i++) {
+if (remodelingTechInput.AHU.size.length > 0) {
+	for (let i = 0; i < remodelingTechInput.AHU.size.length; i++) {
 		let AHUCashFlows = getAnnualCashFlowsOfAHU(remodelingTechInput.AHU.size[i], LCCAssumptionInput.analysisPeriod, remodelingTechInput.AHU['material cost'][i])
 		initialCostAHU += AHUCashFlows[0]
 		totalAHUCashFlow += NPVcalculate(AHUCashFlows, LCCAssumptionInput.realInterest, LCCAssumptionInput.analysisPeriod)
@@ -145,8 +144,8 @@ if (remodelingTechInput.AHU.name.length > 0) {
 // 13. 히트펌프
 var totalHeatpumpCashFlow = 0
 var initialCostHeatpump = 0
-if (remodelingTechInput.heatpump.name.length > 0) {
-	for (let i = 0; i < remodelingTechInput.heatpump.name.length; i++) {
+if (remodelingTechInput.heatpump.size.length > 0) {
+	for (let i = 0; i < remodelingTechInput.heatpump.size.length; i++) {
 		let heatpumpCashFlows = getAnnualCashFlowsOfHeatpump(remodelingTechInput.heatpump.size[i], LCCAssumptionInput.analysisPeriod, remodelingTechInput.heatpump['material cost'][i])
 		initialCostHeatpump += heatpumpCashFlows[0]
 		totalHeatpumpCashFlow += NPVcalculate(heatpumpCashFlows, LCCAssumptionInput.realInterest, LCCAssumptionInput.analysisPeriod)

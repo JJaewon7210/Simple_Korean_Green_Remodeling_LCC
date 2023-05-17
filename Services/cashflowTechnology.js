@@ -11,7 +11,6 @@ import { freezerDB } from '../configs/freezerDB.js'
 import { boilerDB } from '../configs/boilerDB.js'
 import { AHUDB } from '../configs/AHUDB.js'
 import { heatpumpDB } from '../configs/heatpumpDB.js'
-import { packageDB } from '../configs/packageDB.js'
 import { PPI } from '../configs/PPI.js'
 // 1. 벽체
 function getAnnualCashFlowsOfWall(techName, size, userInput, analysisPeriod, materialCost) {
@@ -165,12 +164,7 @@ function getAnnualCashFlowsOfLight(techName, size, userInput, analysisPeriod) {
 		&& obj["개선기준"] === '형광등'
 		&& obj["개선시나리오"] === techName)[0];
 	
-	let _cost;
-	if (userInput.buildingTypeBigCategory === '주거') { 
-		_cost = filteredInfos['가격']
-	} else {
-		_cost = _costLinearRegession[0] * size + _costLinearRegession[1]
-	}
+	let _cost = _costLinearRegession[0] * size + _costLinearRegession[1]
 
 	let repairRatio = filteredInfos['수선율']
 	let repairCycle = filteredInfos['수선주기']
@@ -388,6 +382,5 @@ export {
 	getAnnualCashFlowsOfFreezer,
 	getAnnualCashFlowsOfBoiler,
 	getAnnualCashFlowsOfAHU,
-	getAnnualCashFlowsOfHeatpump, 
-	getAnnualCashFlowsOfPackage
+	getAnnualCashFlowsOfHeatpump
 }
