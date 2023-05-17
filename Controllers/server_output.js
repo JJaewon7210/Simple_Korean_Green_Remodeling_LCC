@@ -1,7 +1,14 @@
 import {
-    totalWallCashFlow, totalRoofCashFlow, totalWindowCashFlow, totalHeatpumpCashFlow, totalLightCashFlow, totalRenewableCashFlow, totalPackageCashFlow,
-    initialCostWall, initialCostRoof, initialCostWindow, initialCostHeatpump, initialCostLight, initialCostRenewable, initialCostPackage,
-    totalInitialCost, techNPV, electricityNPV, gasNPV
+    totalWallCashFlow, totalRoofCashFlow, totalFloorCashFlow, totalWindowCashFlow, totalLightCashFlow,
+    totalInteriorBlindCashFlow, totalExteriorBlindCashFlow, totalRenewableCashFlow, totalDoorCashFlow, totalFreezerCashFlow,
+    totalBoilerCashFlow, totalAHUCashFlow, totalHeatpumpCashFlow,
+
+    initialCostWall, initialCostRoof, initialCostFloor, initialCostWindow, initialCostLight,
+    initialCostInteriorBlind, initialCostExteriorBlind, initialCostRenewable, initialCostDoor, initialCostFreezer,
+    initialCostBoiler, initialCostAHU, initialCostHeatpump,
+
+    totalInitialCost, techNPV,
+    electricityNPV, gasNPV
 } from '../services/getNPV.js'
 import { optimizeResults } from '../services/optimizeGeneticAlgorithm.js'
 
@@ -15,23 +22,35 @@ console.log('gasNPV          :',gasNPV)
 
 // 요소별 기술 초기투자금액
 console.log('\n')
-console.log('initialCostWall      : ', initialCostWall     )
-console.log('initialCostRoof      : ', initialCostRoof     )
-console.log('initialCostWindow    : ', initialCostWindow   )
-console.log('initialCostHeatpump  : ', initialCostHeatpump )
-console.log('initialCostLight     : ', initialCostLight    )
-console.log('initialCostRenewable : ', initialCostRenewable)
-console.log('initialCostPackage   : ', initialCostPackage  )
+console.log('initialCostWall         : ', initialCostWall         )
+console.log('initialCostRoof         : ', initialCostRoof         )
+console.log('initialCostFloor        : ', initialCostFloor        )
+console.log('initialCostWindow       : ', initialCostWindow       )
+console.log('initialCostLight        : ', initialCostLight        )
+console.log('initialCostInteriorBlind: ', initialCostInteriorBlind)
+console.log('initialCostExteriorBlind: ', initialCostExteriorBlind)
+console.log('initialCostRenewable    : ', initialCostRenewable    )
+console.log('initialCostDoor         : ', initialCostDoor         )
+console.log('initialCostFreezer      : ', initialCostFreezer      )
+console.log('initialCostBoiler       : ', initialCostBoiler       )
+console.log('initialCostAHU          : ', initialCostAHU          )
+console.log('initialCostHeatpump     : ', initialCostHeatpump     )
 
 // 요소별 기술 NPV
 console.log('\n')
-console.log('totalWallCashFlow     : ',totalWallCashFlow     )
-console.log('totalRoofCashFlow     : ',totalRoofCashFlow     )
-console.log('totalWindowCashFlow   : ',totalWindowCashFlow   )
-console.log('totalHeatpumpCashFlow : ',totalHeatpumpCashFlow )
-console.log('totalLightCashFlow    : ',totalLightCashFlow    )
-console.log('totalRenewableCashFlow: ',totalRenewableCashFlow)
-console.log('totalPackageCashFlow  : ',totalPackageCashFlow  )
+console.log('totalWallCashFlow         : ', totalWallCashFlow)
+console.log('totalRoofCashFlow         : ', totalRoofCashFlow)
+console.log('totalFloorCashFlow        : ', totalFloorCashFlow)
+console.log('totalWindowCashFlow       : ', totalWindowCashFlow)
+console.log('totalLightCashFlow        : ', totalLightCashFlow)
+console.log('totalInteriorBlindCashFlow: ', totalInteriorBlindCashFlow)
+console.log('totalExteriorBlindCashFlow: ', totalExteriorBlindCashFlow)
+console.log('totalRenewableCashFlow    : ', totalRenewableCashFlow)
+console.log('totalDoorCashFlow         : ', totalDoorCashFlow)
+console.log('totalFreezerCashFlow      : ', totalFreezerCashFlow)
+console.log('totalBoilerCashFlow       : ', totalBoilerCashFlow)
+console.log('totalAHUCashFlow          : ', totalAHUCashFlow)
+console.log('totalHeatpumpCashFlow     : ', totalHeatpumpCashFlow)
 
 // 대출 금액
 const B1 = optimizeResults.greenRemodelingInterestSupportProjectResult
