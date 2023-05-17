@@ -36,13 +36,13 @@ var remodelingTechInput = {
     },
     // 2. 지붕
     "roof": {
-        "name": ["내단열 덧댐시공"], 
+        "name": ["외단열 덧댐시공"], 
         "size": [100], //m2
         "material cost": [1000] 
     },
     // 3. 바닥
     "floor": {
-        "name": ["외단열 덧댐시공"], 
+        "name": ["내단열 덧댐시공"], 
         "size": [100], //m2
         "material cost": [1000] 
     },
