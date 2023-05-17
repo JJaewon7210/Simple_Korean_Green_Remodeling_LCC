@@ -34,6 +34,11 @@ var remodelingTechInput = {
         "material cost": [100, 100]
     },
     "roof": {
+        "name": ["내단열 덧댐시공"], 
+        "size": [100], //m2
+        "material cost": [1000] 
+    },
+    "floor": {
         "name": ["외단열 덧댐시공"], 
         "size": [100], //m2
         "material cost": [1000] 

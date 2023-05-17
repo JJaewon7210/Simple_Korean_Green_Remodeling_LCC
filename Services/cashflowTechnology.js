@@ -1,38 +1,103 @@
 import { wallDB } from '../configs/wallDB.js'
 import { roofDB } from '../configs/roofDB.js'
+import { floorDB } from '../configs/floorDB.js'
 import { windowDB } from '../configs/windowDB.js'
 import { lightDB } from '../configs/lightDB.js'
+import { interiorBlindDB } from '../configs/interiorBlindDB.js'
+import { exteriorBlindDB } from '../configs/exteriorBlindDB.js'
 import { renewableDB } from '../configs/renewableDB.js'
+import { doorDB } from '../configs/doorDB.js'
+import { freezerDB } from '../configs/freezerDB.js'
+import { boilerDB } from '../configs/boilerDB.js'
+import { AHUDB } from '../configs/AHUDB.js'
+
 import { heatpumpDB } from '../configs/heatpumpDB.js'
 import { packageDB } from '../configs/packageDB.js'
 import { PPI } from '../configs/PPI.js'
 
 function getAnnualCashFlowsOfWall(techName, size, userInput, analysisPeriod, materialCost) {
 
-	const filteredInfos = wallDB.filter(
-		obj => obj["용도"] == userInput.buildingTypeBigCategory
-		&& obj["개선기준"] == userInput.buildingAge
-		&& obj["개선재료"] == "일반"
-		&& obj["개선시나리오"] == techName
-		&& obj["개선목표"] == "법적수준")[0];
-
+	if (
+		techName === "외단열 하이패브시스템 (복합보드)" ||
+		techName === "외단열 하이패브시스템 (세라믹사이딩)" ||
+		techName === "외단열 하이패브시스템 (무늬목강판)" ||
+		techName === "외단열 하이패브시스템 (유리패널)"
+	) {
+		let filteredInfos = wallDB.filter(
+			obj => obj["개선시나리오"] == techName
+				&& obj["개선기준"] == "군자동 내역서")[0];
+			
+		let repairRatio = filteredInfos['수선율']
+		let repairCycle = filteredInfos['수선주기']
+		let replacementCycle = filteredInfos['교체주기']
+		let estimatedYear = filteredInfos['견적연도']
+		let unitCost = filteredInfos['가격'] * reflectInflation(estimatedYear)
+		let initialCost = unitCost * size 
 	
-	let repairRatio = filteredInfos['수선율']
-	let repairCycle = filteredInfos['수선주기']
-	let replacementCycle = filteredInfos['교체주기']
-	let materialRatio = filteredInfos['재료비비율']
-	let estimatedYear = filteredInfos['견적연도']
-	let unitCost = filteredInfos[userInput.areaCateogry] * reflectInflation(estimatedYear) * (1 - materialRatio) + materialCost
-	let initialCost = unitCost * size 
+		return getAnnualCashFlows(repairRatio, repairCycle, replacementCycle, analysisPeriod, initialCost)
+		
+	} else {
+		let filteredInfos = wallDB.filter(
+			obj => obj["용도"] == userInput.buildingTypeBigCategory
+			&& obj["개선기준"] == userInput.buildingAge
+			&& obj["개선재료"] == "일반"
+			&& obj["개선시나리오"] == techName
+			&& obj["개선목표"] == "법적수준")[0];
+	
+		let repairRatio = filteredInfos['수선율']
+		let repairCycle = filteredInfos['수선주기']
+		let replacementCycle = filteredInfos['교체주기']
+		let materialRatio = filteredInfos['재료비비율']
+		let estimatedYear = filteredInfos['견적연도']
+		let unitCost = filteredInfos[userInput.areaCateogry] * reflectInflation(estimatedYear) * (1 - materialRatio) + materialCost
+		let initialCost = unitCost * size 
+	
+		return getAnnualCashFlows(repairRatio, repairCycle, replacementCycle, analysisPeriod, initialCost)
+	}
 
-	return getAnnualCashFlows(repairRatio, repairCycle, replacementCycle, analysisPeriod, initialCost)
 }
 
 function getAnnualCashFlowsOfRoof(techName, size, userInput, analysisPeriod, materialCost) {
+	if (
+		techName === "옥상 외단열외방수"
+	) {
+		let filteredInfos = roofDB.filter(
+			obj => obj["개선시나리오"] == techName
+				&& obj["개선기준"] == "군자동 내역서")[0];
 
-	const filteredInfos = roofDB.filter(
-		obj => obj["용도"] === userInput.buildingTypeBigCategory
-		&& obj["개선기준"] === userInput.buildingAge
+		let repairRatio = filteredInfos['수선율']
+		let repairCycle = filteredInfos['수선주기']
+		let replacementCycle = filteredInfos['교체주기']
+		let estimatedYear = filteredInfos['견적연도']
+		let unitCost = filteredInfos['가격'] * reflectInflation(estimatedYear)
+		let initialCost = unitCost * size
+
+		return getAnnualCashFlows(repairRatio, repairCycle, replacementCycle, analysisPeriod, initialCost)
+
+	} else {
+		let filteredInfos = roofDB.filter(
+			obj => obj["용도"] === userInput.buildingTypeBigCategory
+				&& obj["개선기준"] === userInput.buildingAge
+				&& obj["개선재료"] === '일반'
+				&& obj["개선시나리오"] === techName
+				&& obj["개선목표"] === '법적수준')[0];
+
+		let repairRatio = filteredInfos['수선율']
+		let repairCycle = filteredInfos['수선주기']
+		let replacementCycle = filteredInfos['교체주기']
+		let materialRatio = filteredInfos['재료비비율']
+		let estimatedYear = filteredInfos['견적연도']
+		let unitCost = filteredInfos[userInput.areaCateogry] * reflectInflation(estimatedYear) * (1 - materialRatio) + materialCost
+		let initialCost = unitCost * size
+
+		return getAnnualCashFlows(repairRatio, repairCycle, replacementCycle, analysisPeriod, initialCost)
+	}
+}
+
+function getAnnualCashFlowsOfFloor(techName, size, userInput, analysisPeriod, materialCost) {
+
+	let filteredInfos = floorDB.filter(
+		obj => obj["개선기준"] === userInput.buildingAge
 		&& obj["개선재료"] === '일반'
 		&& obj["개선시나리오"] === techName
 		&& obj["개선목표"] === '법적수준')[0];
@@ -49,24 +114,42 @@ function getAnnualCashFlowsOfRoof(techName, size, userInput, analysisPeriod, mat
 }
 
 function getAnnualCashFlowsOfWindow(techName, size, userInput, analysisPeriod, materialCost) {
-	let filteredInfos = windowDB.filter(
-		obj => obj["용도"] === userInput.buildingTypeBigCategory
-		&& obj["개선기준"] === userInput.buildingAge
-		&& obj["개선시나리오"] === techName
-		&& obj["개선목표"] === '법적수준')[0];
+	if (
+		techName === "고단열고기밀 창호"
+	) {
+		let filteredInfos = roofDB.filter(
+			obj => obj["개선시나리오"] == techName
+				&& obj["개선기준"] == "군자동 내역서")[0];
 
-	let repairRatio = filteredInfos['수선율']
-	let repairCycle = filteredInfos['수선주기']
-	let replacementCycle = filteredInfos['교체주기']
-	let materialRatio = filteredInfos['재료비비율']
-	let estimatedYear = filteredInfos['견적연도']
-	let unitCost = filteredInfos[userInput.areaCateogry] * reflectInflation(estimatedYear) * (1-materialRatio) + materialCost
-	let initialCost = unitCost * size
-	
-	return getAnnualCashFlows(repairRatio, repairCycle, replacementCycle, analysisPeriod, initialCost)
+		let repairRatio = filteredInfos['수선율']
+		let repairCycle = filteredInfos['수선주기']
+		let replacementCycle = filteredInfos['교체주기']
+		let estimatedYear = filteredInfos['견적연도']
+		let unitCost = filteredInfos['가격'] * reflectInflation(estimatedYear)
+		let initialCost = unitCost * size
+
+		return getAnnualCashFlows(repairRatio, repairCycle, replacementCycle, analysisPeriod, initialCost)
+
+	} else {
+		let filteredInfos = windowDB.filter(
+			obj => obj["용도"] === userInput.buildingTypeBigCategory
+				&& obj["개선기준"] === userInput.buildingAge
+				&& obj["개선시나리오"] === techName
+				&& obj["개선목표"] === '법적수준')[0];
+
+		let repairRatio = filteredInfos['수선율']
+		let repairCycle = filteredInfos['수선주기']
+		let replacementCycle = filteredInfos['교체주기']
+		let materialRatio = filteredInfos['재료비비율']
+		let estimatedYear = filteredInfos['견적연도']
+		let unitCost = filteredInfos[userInput.areaCateogry] * reflectInflation(estimatedYear) * (1 - materialRatio) + materialCost
+		let initialCost = unitCost * size
+
+		return getAnnualCashFlows(repairRatio, repairCycle, replacementCycle, analysisPeriod, initialCost)
+	}
 }
 
-function getAnnualCashFlowsOfLight(techName, size, userInput, analysisPeriod, materialCost) {
+function getAnnualCashFlowsOfLight(techName, size, userInput, analysisPeriod) {
 	let _costLinearRegession;
 	if (size <= 46) {
 		_costLinearRegession = [10900, 152600]
@@ -93,15 +176,44 @@ function getAnnualCashFlowsOfLight(techName, size, userInput, analysisPeriod, ma
 	let repairRatio = filteredInfos['수선율']
 	let repairCycle = filteredInfos['수선주기']
 	let replacementCycle = filteredInfos['교체주기']
-	let materialRatio = filteredInfos['재료비비율']
 	let estimatedYear = filteredInfos['견적연도']
-	// let initialCost = _cost * (1 - materialRatio) * reflectInflation(estimatedYear) + materialCost * size
 	let initialCost = _cost * reflectInflation(estimatedYear)
 	
 	return getAnnualCashFlows(repairRatio, repairCycle, replacementCycle, analysisPeriod, initialCost)
 }
 
-function getAnnualCashFlowsOfRenewable(techName, size, userInput, analysisPeriod, materialCost) {
+function getAnnualCashFlowsOfInteriorBlind(techName, size, analysisPeriod, materialCost) {
+
+	let filteredInfos = interiorBlindDB.filter(
+		obj => obj["개선시나리오"] === techName)[0];
+
+	let repairRatio = filteredInfos['수선율']
+	let repairCycle = filteredInfos['수선주기']
+	let replacementCycle = filteredInfos['교체주기']
+	let estimatedYear = filteredInfos['견적연도']
+	let unitCost = filteredInfos['노무비'] * reflectInflation(estimatedYear) + materialCost
+	let initialCost = unitCost * size
+	
+	return getAnnualCashFlows(repairRatio, repairCycle, replacementCycle, analysisPeriod, initialCost)
+}
+
+function getAnnualCashFlowsOfExteriorBlind(techName, size, analysisPeriod) {
+
+	let filteredInfos = exteriorBlindDB.filter(
+		obj => obj["개선시나리오"] === techName)[0];
+
+	let repairRatio = filteredInfos['수선율']
+	let repairCycle = filteredInfos['수선주기']
+	let replacementCycle = filteredInfos['교체주기']
+	let estimatedYear = filteredInfos['견적연도']
+	let unitCost = filteredInfos['시공비'] * reflectInflation(estimatedYear)
+	let incidentalCost = filteredInfos['개소당 시공비'] * reflectInflation(estimatedYear)
+	let initialCost = unitCost * size + incidentalCost
+	
+	return getAnnualCashFlows(repairRatio, repairCycle, replacementCycle, analysisPeriod, initialCost)
+}
+
+function getAnnualCashFlowsOfRenewable(techName, size, analysisPeriod) {
 
 	let filteredInfos = renewableDB.filter(
 		obj => obj["개선시나리오"] === techName)[0];
@@ -111,24 +223,124 @@ function getAnnualCashFlowsOfRenewable(techName, size, userInput, analysisPeriod
 	let replacementCycle = filteredInfos['교체주기']
 	let materialRatio = filteredInfos['재료비비율']
 	let estimatedYear = filteredInfos['견적연도']
-	let unitCost = filteredInfos['가격'] * reflectInflation(estimatedYear) * (1 - materialRatio) + materialCost
+	let unitCost = filteredInfos['시공비'] * reflectInflation(estimatedYear)
 	let initialCost = unitCost * size
 
 	return getAnnualCashFlows(repairRatio, repairCycle, replacementCycle, analysisPeriod, initialCost)
 }
 
-function getAnnualCashFlowsOfHeatpump(techName, size, userInput, analysisPeriod, materialCost) {
+function getAnnualCashFlowsOfDoor(techName, size, analysisPeriod, materialCost) {
+	if (
+		techName === "단열방화도어"
+	) {
+		let filteredInfos = doorDB.filter(
+			obj => obj["개선시나리오"] == techName
+				&& obj["개선기준"] == "군자동 내역서")[0];
 
-	let filteredInfos = heatpumpDB.filter(
-		obj => obj["개선시나리오"] === techName)[0];
+		let repairRatio = filteredInfos['수선율']
+		let repairCycle = filteredInfos['수선주기']
+		let replacementCycle = filteredInfos['교체주기']
+		let estimatedYear = filteredInfos['견적연도']
+		let unitCost = filteredInfos['가격'] * reflectInflation(estimatedYear)
+		let initialCost = unitCost * size
+
+		return getAnnualCashFlows(repairRatio, repairCycle, replacementCycle, analysisPeriod, initialCost)
+
+	} else {
+
+		let filteredInfos = doorDB.filter(
+			obj => obj["개선시나리오"] === techName)[0];
+
+		let repairRatio = filteredInfos['수선율']
+		let repairCycle = filteredInfos['수선주기']
+		let replacementCycle = filteredInfos['교체주기']
+		let estimatedYear = filteredInfos['견적연도']
+		let unitCost = (filteredInfos['노무비'] + filteredInfos['단가배수'] * materialCost) * reflectInflation(estimatedYear)
+		let initialCost = unitCost * size
+
+		return getAnnualCashFlows(repairRatio, repairCycle, replacementCycle, analysisPeriod, initialCost)
+	}
+}
+
+function getAnnualCashFlowsOfFreezer(size, analysisPeriod) {
+
+	let filteredInfos = freezerDB.filter(
+		obj => obj["개선시나리오"] === "상업용 냉동기")[0];
 
 	let repairRatio = filteredInfos['수선율']
 	let repairCycle = filteredInfos['수선주기']
 	let replacementCycle = filteredInfos['교체주기']
 	let materialRatio = filteredInfos['재료비비율']
 	let estimatedYear = filteredInfos['견적연도']
-	let _cost = filteredInfos['기울기'] * size + filteredInfos['절편값']
-	let initialCost = _cost * reflectInflation(estimatedYear) * (1 - materialRatio) + materialCost * size
+	let unitCost = filteredInfos['시공비'] * reflectInflation(estimatedYear)
+	let initialCost = unitCost * size
+
+	return getAnnualCashFlows(repairRatio, repairCycle, replacementCycle, analysisPeriod, initialCost)
+}
+
+function getAnnualCashFlowsOfBoiler(techName, size, analysisPeriod, materialCost) {
+
+	let filteredInfos = boilerDB.filter(
+		obj => obj["모델명"] === techName)[0];
+	
+	if (Object.keys(filteredInfos).length === 0) {
+		let filteredInfos = boilerDB.filter(
+			obj => obj["상업용 냉동기"] === techName)[0];
+
+		let repairRatio = filteredInfos['수선율']
+		let repairCycle = filteredInfos['수선주기']
+		let replacementCycle = filteredInfos['교체주기']
+		let materialRatio = filteredInfos['재료비비율']
+		let estimatedYear = filteredInfos['견적연도']
+		
+		let initialCost;
+		if (Number.isInteger(materialCost)) {
+			initialCost = materialCost * (1/materialRatio)
+		} else {
+			initialCost = filteredInfos['시공비'] * reflectInflation(estimatedYear) * size
+		}
+
+		return getAnnualCashFlows(repairRatio, repairCycle, replacementCycle, analysisPeriod, initialCost)
+		
+	} else {
+		let repairRatio = filteredInfos['수선율']
+		let repairCycle = filteredInfos['수선주기']
+		let replacementCycle = filteredInfos['교체주기']
+		let estimatedYear = filteredInfos['견적연도']
+		let initialCost = filteredInfos['시공비'] * reflectInflation(estimatedYear)
+		
+		return getAnnualCashFlows(repairRatio, repairCycle, replacementCycle, analysisPeriod, initialCost)
+	}
+}
+
+function getAnnualCashFlowsOfAHU(size, analysisPeriod, materialCost) {
+
+	let filteredInfos = AHUDB.filter(
+		obj => obj["개선시나리오"] === "상업용 공조기")[0];
+
+	let repairRatio = filteredInfos['수선율']
+	let repairCycle = filteredInfos['수선주기']
+	let replacementCycle = filteredInfos['교체주기']
+	let materialRatio = filteredInfos['재료비비율']
+	let estimatedYear = filteredInfos['견적연도']
+	let unitCost = materialCost * (1/materialRatio) * reflectInflation(estimatedYear)
+	let initialCost = unitCost * size
+
+	return getAnnualCashFlows(repairRatio, repairCycle, replacementCycle, analysisPeriod, initialCost)
+}
+
+function getAnnualCashFlowsOfHeatpump(size, analysisPeriod, materialCost) {
+
+	let filteredInfos = heatpumpDB.filter(
+		obj => obj["개선시나리오"] === "상업용 히트펌프")[0];
+	
+	let repairRatio = filteredInfos['수선율']
+	let repairCycle = filteredInfos['수선주기']
+	let replacementCycle = filteredInfos['교체주기']
+	let materialRatio = filteredInfos['재료비비율']
+	let estimatedYear = filteredInfos['견적연도']
+	let unitCost = (materialCost + filteredInfos['노무비']) * reflectInflation(estimatedYear)
+	let initialCost = unitCost * size
 
 	return getAnnualCashFlows(repairRatio, repairCycle, replacementCycle, analysisPeriod, initialCost)
 }
@@ -198,13 +410,30 @@ function getAnnualCashFlows(repairRatio, repairCycle, replacementCycle, analysis
 }
 
 function reflectInflation (estimatedYear) {
-	const ppi2022 = PPI.find(item => item.year === 2022);
-	const ppi20xx = PPI.find(item => item.year === estimatedYear);
+	let ppi2022 = PPI.find(item => item.year === 2022);
+	let ppi20xx = PPI.find(item => item.year === estimatedYear);
 	let inflationRatio = ppi2022.value / ppi20xx.value
 	return inflationRatio
 }
 
 export {
-	getAnnualCashFlowsOfWall, getAnnualCashFlowsOfRoof, getAnnualCashFlowsOfWindow, getAnnualCashFlowsOfRenewable,
-	getAnnualCashFlowsOfHeatpump, getAnnualCashFlowsOfLight, getAnnualCashFlowsOfPackage
+	getAnnualCashFlowsOfWall, 
+	getAnnualCashFlowsOfRoof, 
+	getAnnualCashFlowsOfFloor,
+	
+	getAnnualCashFlowsOfWindow, 
+	getAnnualCashFlowsOfLight, 
+
+	getAnnualCashFlowsOfInteriorBlind,
+	getAnnualCashFlowsOfExteriorBlind,
+
+	getAnnualCashFlowsOfRenewable,
+	getAnnualCashFlowsOfDoor,
+	getAnnualCashFlowsOfFreezer,
+	getAnnualCashFlowsOfBoiler,
+	getAnnualCashFlowsOfAHU,
+
+	getAnnualCashFlowsOfHeatpump, 
+
+	getAnnualCashFlowsOfPackage
 }

@@ -39,4 +39,8 @@ export const PPI = [
         year: 2022,
         value: 118.78,
     },
+    {
+        year: 2023,
+        value: 120.58,
+    },
 ];
