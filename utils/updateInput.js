@@ -51,4 +51,4 @@ function updateUserInput(userInput) {
 import { userInput } from "../controllers/client_input.js";
 var updatedUserInput = updateUserInput(userInput)
 
-export { updatedUserInput }
+export { updatedUserInput, updateUserInput }
