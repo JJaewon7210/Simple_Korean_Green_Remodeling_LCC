@@ -91,6 +91,8 @@ var Genetic = Genetic || (function(){
 		this.optimize = null;
 		this.generation = null;
 		this.notification = null;
+		this.loanCalculate = null;
+		this.NPVcalculate = null;
 		
 		this.configuration = {
 			"size": 250

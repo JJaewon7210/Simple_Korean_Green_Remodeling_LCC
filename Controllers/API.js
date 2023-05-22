@@ -212,6 +212,8 @@ function getOutput(userInput, energyContract, monthlyElectricityInput, monthlyGa
     genetic.optimize = Genetic.Optimize.Minimize;
     genetic.select1 = Genetic.Select1.Tournament2;
     genetic.select2 = Genetic.Select2.Tournament2;
+    genetic.loanCalculate = loanCalculate;
+    genetic.NPVcalculate = NPVcalculate;
 
     genetic.seed = function () {
         var totalRemodelingCost = parseInt(this.userData.totalRemodelingCost)
@@ -284,9 +286,10 @@ function getOutput(userInput, energyContract, monthlyElectricityInput, monthlyGa
     };
 
     genetic.fitness = function (entity) {
+
         function NPV(buisness) {
-            var yearPayments = loanCalculate(buisness.loanAmount, buisness.interestRatio, buisness.interestSupportRatio, buisness.repaymentPeriod, buisness.holdPeriod)
-            var npv = NPVcalculate(yearPayments, buisness.realInterest)
+            var yearPayments = genetic.loanCalculate(buisness.loanAmount, buisness.interestRatio, buisness.interestSupportRatio, buisness.repaymentPeriod, buisness.holdPeriod)
+            var npv = genetic.NPVcalculate(yearPayments, buisness.realInterest)
             return npv
         }
 
