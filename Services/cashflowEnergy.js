@@ -75,7 +75,7 @@ function nonResidentialElectricityCalculate(montlyElectricityConsumption, energy
 
 
 	var yearElectricityPayment = 0
-	for (i = 0; i<12; i++){
+	for (var i = 0; i<12; i++){
 		var E = montlyElectricityConsumption[i]
 
 		// different price for each season

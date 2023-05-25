@@ -25,6 +25,8 @@ var monthlyGasInput = {
 var LCCAssumptionInput = {
     'analysisPeriod': 20, //분석기간 (years)
     'realInterest': 0.0087, // 실질할인율
+    'electricityRealInterest': -0.0083,
+    'gasRealInterest': -0.0434
 }
 
 var remodelingTechInput = {
@@ -126,6 +128,15 @@ var detailedFundInformationInput = {
     'initialUserCapital': 0 // 개인자본 (B6)
 }
 
+var customizedRatio = {
+    'ratioGreen'  : 0.2, // 총 공사비 대비 그린리모델링 이자지원 사업을 이용해 대출한 금액
+    'ratioSeoul'  : 0.3, // 총 공사비 대비 서울시 집수리 융자사업을 이용해 대출한 금액
+    'ratioRural'  : 0,   // 총 공사비 대비 농어촌 주택개량사업을 이용해 대출한 금액
+    'ratioMortage': 0.5, // 총 공사비 대비 주택담보대출을 이용해 대출한 금액
+    'ratioCredit' : 0.4, // 총 공사비 대비 신용대출을 이용해 대출한 금액    
+}
+
+
 export {userInput, energyContract, 
     monthlyElectricityInput, monthlyGasInput, 
-    LCCAssumptionInput, remodelingTechInput, detailedFundInformationInput}
+    LCCAssumptionInput, remodelingTechInput, detailedFundInformationInput, customizedRatio}

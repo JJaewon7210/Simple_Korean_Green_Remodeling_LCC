@@ -166,11 +166,11 @@ function getOutput(userInput, energyContract, monthlyElectricityInput, monthlyGa
     // calculate electricity and gas cost
     var EPRICE_BEFORE = electricityCostCalculate(monthlyElectricityInput.before, updatedUserInput , energyContract)
     var EPRICE_AFTER = electricityCostCalculate(monthlyElectricityInput.after, updatedUserInput , energyContract)
-    var electricityNPV = NPVcalculate(EPRICE_BEFORE - EPRICE_AFTER, LCCAssumptionInput.realInterest, LCCAssumptionInput.analysisPeriod) 
+    var electricityNPV = NPVcalculate(EPRICE_BEFORE - EPRICE_AFTER, LCCAssumptionInput.electricityRealInterest, LCCAssumptionInput.analysisPeriod) 
 
     var GPRICE_BEFORE = gasCostCalculate(monthlyGasInput.before, updatedUserInput )
     var GPRICE_AFTER = gasCostCalculate(monthlyGasInput.after, updatedUserInput )
-    var gasNPV = NPVcalculate(GPRICE_BEFORE - GPRICE_AFTER, LCCAssumptionInput.realInterest, LCCAssumptionInput.analysisPeriod)
+    var gasNPV = NPVcalculate(GPRICE_BEFORE - GPRICE_AFTER, LCCAssumptionInput.gasRealInterest, LCCAssumptionInput.analysisPeriod)
 
     // round the output 1000 KRW
     totalWallCashFlow = Math.round(totalWallCashFlow / 1000) * 1000
@@ -567,7 +567,7 @@ function getOutput(userInput, energyContract, monthlyElectricityInput, monthlyGa
     // 분석 결과
     const ICC = totalInitialCost
     const NPV = -(techNPV + optimizeResults.NPV - ICC) + (electricityNPV + gasNPV)
-    const SIR = (electricityNPV + gasNPV) / (techNPV + optimizeResults.NPV - ICC) 
+    const SIR = (electricityNPV + gasNPV) / (techNPV + optimizeResults.NPV - ICC)
     const TR  = - optimizeResults.NPV
     const ECR = (electricityNPV + gasNPV)
 
@@ -581,4 +581,268 @@ function getOutput(userInput, energyContract, monthlyElectricityInput, monthlyGa
     
 }
 
-export {getOutput}
+function getCustomOutput(customizedRatio, userInput, energyContract, monthlyElectricityInput, monthlyGasInput, LCCAssumptionInput, remodelingTechInput, detailedFundInformationInput){
+    // Chapter 1.
+    var updatedUserInput = updateUserInput(userInput)
+
+    // Chapter 2.
+    // 1. 벽체
+    var totalWallCashFlow = 0
+    var initialCostWall = 0
+    if (remodelingTechInput.wall.size.length > 0) {
+        for (let i = 0; i < remodelingTechInput.wall.size.length; i++) {
+            let wallCashFlows = getAnnualCashFlowsOfWall(remodelingTechInput.wall.name[i], remodelingTechInput.wall.size[i], updatedUserInput, LCCAssumptionInput.analysisPeriod, remodelingTechInput.wall['material cost'][i])
+            initialCostWall += wallCashFlows[0]
+            totalWallCashFlow += NPVcalculate(wallCashFlows, LCCAssumptionInput.realInterest, LCCAssumptionInput.analysisPeriod)
+        }
+    }
+    // 2. 지붕
+    var totalRoofCashFlow = 0
+    var initialCostRoof = 0
+    if (remodelingTechInput.roof.size.length > 0) {
+        for (let i = 0; i < remodelingTechInput.roof.size.length; i++) {
+            let roofCashFlows = getAnnualCashFlowsOfRoof(remodelingTechInput.roof.name[i], remodelingTechInput.roof.size[i], updatedUserInput, LCCAssumptionInput.analysisPeriod, remodelingTechInput.roof['material cost'][i])
+            initialCostRoof += roofCashFlows[0]
+            totalRoofCashFlow += NPVcalculate(roofCashFlows, LCCAssumptionInput.realInterest, LCCAssumptionInput.analysisPeriod)
+        }
+    }
+    // 3. 바닥
+    var totalFloorCashFlow = 0
+    var initialCostFloor = 0
+    if (remodelingTechInput.floor.size.length > 0) {
+        for (let i = 0; i < remodelingTechInput.floor.size.length; i++) {
+            let floorCashFlows = getAnnualCashFlowsOfFloor(remodelingTechInput.floor.name[i], remodelingTechInput.floor.size[i], updatedUserInput, LCCAssumptionInput.analysisPeriod, remodelingTechInput.floor['material cost'][i])
+            initialCostFloor += floorCashFlows[0]
+            totalFloorCashFlow += NPVcalculate(floorCashFlows, LCCAssumptionInput.realInterest, LCCAssumptionInput.analysisPeriod)
+        }
+    }
+    // 4. 창문
+    var totalWindowCashFlow = 0
+    var initialCostWindow = 0
+    if (remodelingTechInput.window.size.length > 0) {
+        for (let i = 0; i < remodelingTechInput.window.size.length; i++) {
+            let windowCashFlows = getAnnualCashFlowsOfWindow(remodelingTechInput.window.name[i], remodelingTechInput.window.size[i], updatedUserInput, LCCAssumptionInput.analysisPeriod, remodelingTechInput.window['material cost'][i])
+            initialCostWindow += windowCashFlows[0]
+            totalWindowCashFlow += NPVcalculate(windowCashFlows, LCCAssumptionInput.realInterest, LCCAssumptionInput.analysisPeriod)
+        }
+    }
+    // 5. 조명
+    var totalLightCashFlow = 0
+    var initialCostLight = 0
+    if (remodelingTechInput.light.size.length > 0) {
+        for (let i = 0; i < remodelingTechInput.light.size.length; i++) {
+            let lightCashFlows = getAnnualCashFlowsOfLight(remodelingTechInput.light.size[i], LCCAssumptionInput.analysisPeriod)
+            initialCostLight += lightCashFlows[0]
+            totalLightCashFlow += NPVcalculate(lightCashFlows, LCCAssumptionInput.realInterest, LCCAssumptionInput.analysisPeriod)
+        }
+    }
+    // 6. 내부차장
+    var totalInteriorBlindCashFlow = 0
+    var initialCostInteriorBlind = 0
+    if (remodelingTechInput.interiorBlind.size.length > 0) {
+        for (let i = 0; i < remodelingTechInput.interiorBlind.size.length; i++) {
+            let interiorBlindCashFlows = getAnnualCashFlowsOfInteriorBlind(remodelingTechInput.interiorBlind.name[i], remodelingTechInput.interiorBlind.size[i], LCCAssumptionInput.analysisPeriod, remodelingTechInput.interiorBlind['material cost'][i])
+            initialCostInteriorBlind += interiorBlindCashFlows[0]
+            totalInteriorBlindCashFlow += NPVcalculate(interiorBlindCashFlows, LCCAssumptionInput.realInterest, LCCAssumptionInput.analysisPeriod)
+        }
+    }
+    //7. 외부차양
+    var totalExteriorBlindCashFlow = 0
+    var initialCostExteriorBlind = 0
+    if (remodelingTechInput.exteriorBlind.size.length > 0) {
+        for (let i = 0; i < remodelingTechInput.exteriorBlind.size.length; i++) {
+            let exteriorBlindCashFlows = getAnnualCashFlowsOfExteriorBlind(remodelingTechInput.exteriorBlind.name[i], remodelingTechInput.exteriorBlind.size[i], LCCAssumptionInput.analysisPeriod)
+            initialCostExteriorBlind += exteriorBlindCashFlows[0]
+            totalExteriorBlindCashFlow += NPVcalculate(exteriorBlindCashFlows, LCCAssumptionInput.realInterest, LCCAssumptionInput.analysisPeriod)
+        }
+    }
+    // 8. 태양광
+    var totalRenewableCashFlow = 0
+    var initialCostRenewable = 0
+    if (remodelingTechInput.renewable.size.length > 0) {
+        for (let i = 0; i < remodelingTechInput.renewable.size.length; i++) {
+            let renewableCashFlows = getAnnualCashFlowsOfRenewable(remodelingTechInput.renewable.name[i], remodelingTechInput.renewable.size[i], LCCAssumptionInput.analysisPeriod)
+            initialCostRenewable += renewableCashFlows[0]
+            totalRenewableCashFlow += NPVcalculate(renewableCashFlows, LCCAssumptionInput.realInterest, LCCAssumptionInput.analysisPeriod)
+        }
+    }
+    // 9. 출입문
+    var totalDoorCashFlow = 0
+    var initialCostDoor = 0
+    if (remodelingTechInput.door.size.length > 0) {
+        for (let i = 0; i < remodelingTechInput.door.size.length; i++) {
+            let doorCashFlows = getAnnualCashFlowsOfDoor(remodelingTechInput.door.name[i], remodelingTechInput.door.size[i], LCCAssumptionInput.analysisPeriod, remodelingTechInput.door['material cost'][i])
+            initialCostDoor += doorCashFlows[0]
+            totalDoorCashFlow += NPVcalculate(doorCashFlows, LCCAssumptionInput.realInterest, LCCAssumptionInput.analysisPeriod)
+        }
+    }
+    // 10. 냉동기
+    var totalFreezerCashFlow = 0
+    var initialCostFreezer = 0
+    if (remodelingTechInput.freezer.size.length > 0) {
+        for (let i = 0; i < remodelingTechInput.freezer.size.length; i++) {
+            let freezerCashFlows = getAnnualCashFlowsOfFreezer(remodelingTechInput.freezer.size[i], LCCAssumptionInput.analysisPeriod)
+            initialCostFreezer += freezerCashFlows[0]
+            totalFreezerCashFlow += NPVcalculate(freezerCashFlows, LCCAssumptionInput.realInterest, LCCAssumptionInput.analysisPeriod)
+        }
+    }
+    // 11. 보일러
+    var totalBoilerCashFlow = 0
+    var initialCostBoiler = 0
+    if (remodelingTechInput.boiler.size.length > 0) {
+        for (let i = 0; i < remodelingTechInput.boiler.size.length; i++) {
+            let boilerCashFlows = getAnnualCashFlowsOfBoiler(remodelingTechInput.boiler.name[i], remodelingTechInput.boiler.size[i], LCCAssumptionInput.analysisPeriod, remodelingTechInput.boiler['material cost'][i])
+            initialCostBoiler += boilerCashFlows[0]
+            totalBoilerCashFlow += NPVcalculate(boilerCashFlows, LCCAssumptionInput.realInterest, LCCAssumptionInput.analysisPeriod)
+        }
+    }
+    // 12. 공조기
+    var totalAHUCashFlow = 0
+    var initialCostAHU = 0
+    if (remodelingTechInput.AHU.size.length > 0) {
+        for (let i = 0; i < remodelingTechInput.AHU.size.length; i++) {
+            let AHUCashFlows = getAnnualCashFlowsOfAHU(remodelingTechInput.AHU.size[i], LCCAssumptionInput.analysisPeriod, remodelingTechInput.AHU['material cost'][i])
+            initialCostAHU += AHUCashFlows[0]
+            totalAHUCashFlow += NPVcalculate(AHUCashFlows, LCCAssumptionInput.realInterest, LCCAssumptionInput.analysisPeriod)
+        }
+    }
+    // 13. 히트펌프
+    var totalHeatpumpCashFlow = 0
+    var initialCostHeatpump = 0
+    if (remodelingTechInput.heatpump.size.length > 0) {
+        for (let i = 0; i < remodelingTechInput.heatpump.size.length; i++) {
+            let heatpumpCashFlows = getAnnualCashFlowsOfHeatpump(remodelingTechInput.heatpump.size[i], LCCAssumptionInput.analysisPeriod, remodelingTechInput.heatpump['material cost'][i])
+            initialCostHeatpump += heatpumpCashFlows[0]
+            totalHeatpumpCashFlow += NPVcalculate(heatpumpCashFlows, LCCAssumptionInput.realInterest, LCCAssumptionInput.analysisPeriod)
+        }
+    }
+
+    var techNPV = totalWallCashFlow + totalRoofCashFlow + totalFloorCashFlow + totalWindowCashFlow + totalLightCashFlow +
+        totalInteriorBlindCashFlow + totalExteriorBlindCashFlow + totalRenewableCashFlow + totalDoorCashFlow + totalFreezerCashFlow +
+        totalBoilerCashFlow + totalAHUCashFlow + totalHeatpumpCashFlow
+
+    var totalInitialCost = initialCostWall + initialCostRoof + initialCostFloor + initialCostWindow + initialCostLight +
+        initialCostInteriorBlind + initialCostExteriorBlind + initialCostRenewable + initialCostDoor + initialCostFreezer +
+        initialCostBoiler + initialCostAHU + initialCostHeatpump
+
+    // calculate electricity and gas cost
+    var EPRICE_BEFORE = electricityCostCalculate(monthlyElectricityInput.before, updatedUserInput, energyContract)
+    var EPRICE_AFTER = electricityCostCalculate(monthlyElectricityInput.after, updatedUserInput, energyContract)
+    var electricityNPV = NPVcalculate(EPRICE_BEFORE - EPRICE_AFTER, LCCAssumptionInput.electricityRealInterest, LCCAssumptionInput.analysisPeriod)
+
+    var GPRICE_BEFORE = gasCostCalculate(monthlyGasInput.before, updatedUserInput)
+    var GPRICE_AFTER = gasCostCalculate(monthlyGasInput.after, updatedUserInput)
+    var gasNPV = NPVcalculate(GPRICE_BEFORE - GPRICE_AFTER, LCCAssumptionInput.gasRealInterest, LCCAssumptionInput.analysisPeriod)
+
+    // round the output 1000 KRW
+    totalWallCashFlow = Math.round(totalWallCashFlow / 1000) * 1000
+    totalRoofCashFlow = Math.round(totalRoofCashFlow / 1000) * 1000
+    totalFloorCashFlow = Math.round(totalFloorCashFlow / 1000) * 1000
+    totalWindowCashFlow = Math.round(totalWindowCashFlow / 1000) * 1000
+    totalLightCashFlow = Math.round(totalLightCashFlow / 1000) * 1000
+    totalInteriorBlindCashFlow = Math.round(totalInteriorBlindCashFlow / 1000) * 1000
+    totalExteriorBlindCashFlow = Math.round(totalExteriorBlindCashFlow / 1000) * 1000
+    totalRenewableCashFlow = Math.round(totalRenewableCashFlow / 1000) * 1000
+    totalDoorCashFlow = Math.round(totalDoorCashFlow / 1000) * 1000
+    totalFreezerCashFlow = Math.round(totalFreezerCashFlow / 1000) * 1000
+    totalBoilerCashFlow = Math.round(totalBoilerCashFlow / 1000) * 1000
+    totalAHUCashFlow = Math.round(totalAHUCashFlow / 1000) * 1000
+    totalHeatpumpCashFlow = Math.round(totalHeatpumpCashFlow / 1000) * 1000
+
+    initialCostWall = Math.round(initialCostWall / 1000) * 1000
+    initialCostRoof = Math.round(initialCostRoof / 1000) * 1000
+    initialCostFloor = Math.round(initialCostFloor / 1000) * 1000
+    initialCostWindow = Math.round(initialCostWindow / 1000) * 1000
+    initialCostLight = Math.round(initialCostLight / 1000) * 1000
+    initialCostInteriorBlind = Math.round(initialCostInteriorBlind / 1000) * 1000
+    initialCostExteriorBlind = Math.round(initialCostExteriorBlind / 1000) * 1000
+    initialCostRenewable = Math.round(initialCostRenewable / 1000) * 1000
+    initialCostDoor = Math.round(initialCostDoor / 1000) * 1000
+    initialCostFreezer = Math.round(initialCostFreezer / 1000) * 1000
+    initialCostBoiler = Math.round(initialCostBoiler / 1000) * 1000
+    initialCostAHU = Math.round(initialCostAHU / 1000) * 1000
+    initialCostHeatpump = Math.round(initialCostHeatpump / 1000) * 1000
+
+    totalInitialCost = Math.round(totalInitialCost / 1000) * 1000
+    techNPV = Math.round(techNPV / 1000) * 1000
+
+    electricityNPV = Math.round(electricityNPV / 1000) * 1000
+    gasNPV = Math.round(gasNPV / 1000) * 1000
+
+    // Chapter 2.
+
+    let B1_OBJ = new greenRemodelingInterestSupportProject(
+        userInput.buildingType, detailedFundInformationInput.mortageLoanInterest, 
+        detailedFundInformationInput.creditLoanInterest, userInput.card, LCCAssumptionInput.realInterest, true)
+    let B2_OBJ = new seoulHomeRepairLoanProject(
+        userInput.buildingType, detailedFundInformationInput.mortageLoanInterest, 
+        detailedFundInformationInput.creditLoanInterest, userInput.approvalYear, LCCAssumptionInput.realInterest, true)
+    let B3_OBJ = new ruralHousingImrpoveProject(
+        LCCAssumptionInput.realInterest, true)
+    let B4_OBJ = new mortageLoanProject(
+        detailedFundInformationInput.mortageLoanMaxLimit, detailedFundInformationInput.mortageLoanInterest, 
+        detailedFundInformationInput.mortageLoanRepaymentMonth, detailedFundInformationInput.mortageLoanHoldMonth, 
+        LCCAssumptionInput.realInterest, true)
+    let B5_OBJ = new creditLoanProject(
+        detailedFundInformationInput.creditLoanMaxLimit, detailedFundInformationInput.creditLoanInterest, 
+        detailedFundInformationInput.creditLoanRepaymentMonth, detailedFundInformationInput.creditLoanHoldMonth, 
+        LCCAssumptionInput.realInterest, true)
+
+    // Chapter 3.
+    function buisnessNPVcalculate(buisness) {
+        var yearPayments = loanCalculate(buisness.loanAmount, buisness.interestRatio, buisness.interestSupportRatio, buisness.repaymentPeriod, buisness.holdPeriod)
+        var npv = NPVcalculate(yearPayments, buisness.realInterest)
+        return npv
+    }
+    // NPV 계산
+    let B1_NPV = buisnessNPVcalculate(B1_OBJ)
+    let B2_NPV = buisnessNPVcalculate(B2_OBJ)
+    let B3_NPV = buisnessNPVcalculate(B3_OBJ)
+    let B4_NPV = buisnessNPVcalculate(B4_OBJ)
+    let B5_NPV = buisnessNPVcalculate(B5_OBJ)
+    let businessNPV = B1_NPV + B2_NPV + B3_NPV + B4_NPV + B5_NPV
+
+    // 대출 금액
+    let _B1 = customizedRatio.ratioGreen   * totalInitialCost
+    let _B2 = customizedRatio.ratioSeoul   * totalInitialCost
+    let _B3 = customizedRatio.ratioRural   * totalInitialCost
+    let _B4 = customizedRatio.ratioMortage * totalInitialCost
+    let _B5 = customizedRatio.ratioCredit  * totalInitialCost
+    let _B6 = detailedFundInformationInput.initialUserCapital
+
+    // 대출 금액 비율
+    const B1_result = _B1 / (_B1 + _B2 + _B3 + _B4 + _B5 + _B6)
+    const B2_result = _B2 / (_B1 + _B2 + _B3 + _B4 + _B5 + _B6)
+    const B3_result = _B3 / (_B1 + _B2 + _B3 + _B4 + _B5 + _B6)
+    const B4_result = _B4 / (_B1 + _B2 + _B3 + _B4 + _B5 + _B6)
+    const B5_result = _B5 / (_B1 + _B2 + _B3 + _B4 + _B5 + _B6)
+    const B6_result = _B6 / (_B1 + _B2 + _B3 + _B4 + _B5 + _B6)
+
+    // 분석 결과
+    const ICC = totalInitialCost
+    const NPV = -(techNPV + businessNPV - ICC) + (electricityNPV + gasNPV)
+    const SIR = (electricityNPV + gasNPV) / (techNPV + businessNPV - ICC)
+    const TR  = -businessNPV
+    const ECR = (electricityNPV + gasNPV)
+
+    // 결과
+    const optimizeResults = {
+        "greenRemodelingInterestSupportProjectResult": Math.round(_B1 / 1000) * 1000,
+        "seoulHomeRepairLoanProjectResult": Math.round(_B2 / 1000) * 1000,
+        "ruralHousingImrpoveProjectResult": Math.round(_B3 / 1000) * 1000,
+        "mortageLoanProjectResult": Math.round(_B4 / 1000) * 1000,
+        "creditLoanProjectResult": Math.round(_B5 / 1000) * 1000,
+        "NPV": Math.round(businessNPV / 1000) * 1000,
+        "excessCost": 0
+    }
+
+    return {
+        optimizeResults, B1_result, B2_result, B3_result, B4_result, B5_result, B6_result,
+        ICC, NPV, SIR, TR, ECR,
+        initialCostWall, initialCostRoof, initialCostFloor, initialCostWindow,
+        initialCostLight, initialCostInteriorBlind, initialCostExteriorBlind,
+        initialCostRenewable, initialCostDoor, initialCostFreezer, initialCostBoiler, initialCostAHU, initialCostHeatpump
+    }
+}
+
+export { getOutput, getCustomOutput }
