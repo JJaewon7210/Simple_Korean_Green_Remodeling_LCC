@@ -1,4 +1,4 @@
-import {updateUserInput} from '../utils/updateInput.js'
+import {updateUserInput, changeApplyBuisness} from '../utils/updateInput.js'
 import {
 	getAnnualCashFlowsOfWall,
 	getAnnualCashFlowsOfRoof,
@@ -22,6 +22,7 @@ import { greenRemodelingInterestSupportProject, seoulHomeRepairLoanProject, rura
 function getOutput(userInput, energyContract, monthlyElectricityInput, monthlyGasInput, LCCAssumptionInput, remodelingTechInput, detailedFundInformationInput){
     // Chapter 1.
     var updatedUserInput = updateUserInput(userInput)
+    var detailedFundInformationInput = changeApplyBuisness(userInput, detailedFundInformationInput)
 
     // Chapter 2.
     // 1. 벽체
@@ -463,7 +464,6 @@ function getOutput(userInput, energyContract, monthlyElectricityInput, monthlyGa
     detailedFundInformationInput.realInterest   = LCCAssumptionInput.realInterest
     detailedFundInformationInput.analysisPeriod = LCCAssumptionInput.analysisPeriod
     detailedFundInformationInput.totalRemodelingCost = totalInitialCost
-
     genetic.userData = detailedFundInformationInput
 
     // 2. Check the validity of the total remodeling cost
@@ -584,6 +584,7 @@ function getOutput(userInput, energyContract, monthlyElectricityInput, monthlyGa
 function getCustomOutput(customizedRatio, userInput, energyContract, monthlyElectricityInput, monthlyGasInput, LCCAssumptionInput, remodelingTechInput, detailedFundInformationInput){
     // Chapter 1.
     var updatedUserInput = updateUserInput(userInput)
+    var detailedFundInformationInput = changeApplyBuisness(userInput, detailedFundInformationInput)
 
     // Chapter 2.
     // 1. 벽체

@@ -51,7 +51,10 @@ export class greenRemodelingInterestSupportProject extends Project  {
                 this.holdPeriod = 36
                 this.interestSupportRatio = 0.03
             } else {
-                throw new Error ('wrong card. please select with [신한은행, 제주은행, 기업은행, 국민은행, 농협카드]')
+                this.repaymentPeriod = 60
+                this.holdPeriod = 0
+                this.interestSupportRatio = 0
+                // throw new Error ('wrong card. please select with [신한은행, 제주은행, 기업은행, 국민은행, 농협카드]')
             }
         } else if (buildingType == '주거-단독') {
             if (['신한은행','우리은행','국민은행','농협은행'].includes(card)){
@@ -63,7 +66,10 @@ export class greenRemodelingInterestSupportProject extends Project  {
                 this.holdPeriod = 0
                 this.interestSupportRatio = 0
             } else {
-                throw new Error ('wrong card. please select with [신한은행, 우리은행, 국민은행, 농협은행, 신한카드]')
+                this.repaymentPeriod = 60
+                this.holdPeriod = 0
+                this.interestSupportRatio = 0
+                // throw new Error ('wrong card. please select with [신한은행, 우리은행, 국민은행, 농협은행, 신한카드]')
             }
         } else {
             if (['신한은행','우리은행','국민은행','농협은행'].includes(card)){
@@ -75,7 +81,10 @@ export class greenRemodelingInterestSupportProject extends Project  {
                 this.holdPeriod = 0
                 this.interestSupportRatio = 0
             } else {
-                throw new Error ('wrong card. please select with [신한은행, 우리은행, 국민은행, 농협은행, 롯데카드, 삼성카드, 신한카드]')
+                this.repaymentPeriod = 36
+                this.holdPeriod = 0
+                this.interestSupportRatio = 0
+                // throw new Error ('wrong card. please select with [신한은행, 우리은행, 국민은행, 농협은행, 롯데카드, 삼성카드, 신한카드]')
             }
         }
     }
@@ -84,7 +93,7 @@ export class greenRemodelingInterestSupportProject extends Project  {
 export class seoulHomeRepairLoanProject extends Project {
     constructor (buildingType, mortageLoanInterest, creditLoanInterest, approvalYear, realInterest, apply) {
         super()
-        this.projName = ' seoulHomeRepairLoanProject'
+        this.projName = 'seoulHomeRepairLoanProject'
         this.buildingType = buildingType
         this.mortageLoanInterest = mortageLoanInterest
         this.creditLoanInterest = creditLoanInterest
@@ -102,7 +111,9 @@ export class seoulHomeRepairLoanProject extends Project {
             this.min = 0
             this.max = 30000000
         } else {
-            throw new Error ('wrong buildingType. please select with [주거-단독, 주거-다중, 주거-다가구, 주거-다세대, 주거-연립]')
+            this.min = 0
+            this.max = 0
+            // throw new Error ('wrong buildingType. please select with [주거-단독, 주거-다중, 주거-다가구, 주거-다세대, 주거-연립]')
         }
         
         // if do not apply Project
@@ -123,7 +134,10 @@ export class seoulHomeRepairLoanProject extends Project {
             this.repaymentPeriod = 60
             this.holdPeriod = 0
         } else {
-            throw new Error ('The year of approval for use must be less than 2012.')
+            this.interestRatio = 0
+            this.repaymentPeriod = 60
+            this.holdPeriod = 0
+            // throw new Error ('The year of approval for use must be less than 2012.')
         }
         
         // set interest support ratio

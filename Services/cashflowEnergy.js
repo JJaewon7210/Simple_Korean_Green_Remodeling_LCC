@@ -2,7 +2,8 @@ import { electricityResidentalPriceDB, electricityIndustrialPriceDB } from "../c
 import { gasPriceDB, UnitHeat } from "../configs/gasPriceDB.js";
 
 export function electricityCostCalculate( montlyElectricityConsumption, userInput, energyContract) {
-	if (userInput.buildingType == '비주거') {
+	// if (userInput.buildingType == '비주거') {
+	if (energyContract.distinct != '주택용') {
 		var annualElectricityCashFlows = nonResidentialElectricityCalculate(montlyElectricityConsumption, energyContract)
 	} else {
 		var annualElectricityCashFlows = residentialElectricityCalculate(montlyElectricityConsumption, energyContract)
@@ -40,20 +41,19 @@ function residentialElectricityCalculate(montlyElectricityConsumption, energyCon
 			var ElecPrice = step01_kWH * FILE['구간1'] + (step02_kWH-step01_kWH) * FILE['구간2'] + (E-step02_kWH) * FILE['구간3']
 			var basicPrice = FILE['기본요금3']
 		}
-
 		// additional price for super user
 		if ([6,8].includes(i)) {
 			if (E > 1000) {
-				ElecPrice += (E-step02_kWH) * (FILE['슈펴유저_여름']-FILE['구간3'])
+				ElecPrice += (E-step02_kWH) * (FILE['슈퍼유저_여름']-FILE['구간3'])
 			}
 		}
 		
 		if ([0,1,11].includes(i)){
 			if (E > 1000) {
-				ElecPrice += (E-step02_kWH) * (FILE['슈퍼유저_겨울']-FILE['구간3'])
+				ElecPrice += (E-step02_kWH) * (FILE['슈퍼유저_여름']-FILE['구간3'])
 			}
 		}
-		
+
 		// final price including VAT ect
 		var climatePrice = E * 7.3
 		var fuelControlPrice = E * 5
@@ -66,14 +66,12 @@ function residentialElectricityCalculate(montlyElectricityConsumption, energyCon
 }
 
 function nonResidentialElectricityCalculate(montlyElectricityConsumption, energyContract) {
-
 	const FILE = electricityIndustrialPriceDB.filter(
 		obj => obj["전압"] == energyContract.pressure
-			&& obj["용도"] == energyContract.distinct
-			&& obj["선택"] == energyContract.select
-			&& obj["시간대"] == '중간부하')[0];
-
-
+		&& obj["용도"] == energyContract.distinct
+		&& obj["선택"] == energyContract.select
+		&& obj["시간대"] == '중간부하')[0];
+		
 	var yearElectricityPayment = 0
 	for (var i = 0; i<12; i++){
 		var E = montlyElectricityConsumption[i]
@@ -81,7 +79,7 @@ function nonResidentialElectricityCalculate(montlyElectricityConsumption, energy
 		// different price for each season
 		if ([6,8].includes(i)) {
 			var ElecPrice = E * FILE['여름철']
-		} else if ([0,1,11]/includes(i)) {
+		} else if ([0,1,11].includes(i)) {
 			var ElecPrice = E * FILE['겨울철']
 		} else {
 			var ElecPrice = E * FILE['봄가을철']
@@ -113,7 +111,7 @@ export function gasCostCalculate(monthlyGasConsumption, userInput) {
 		if (userInput.buildingType == '비주거') {
 			if ([5, 6, 7, 8].includes(i)) {
 				var GasPrice = G * FILE['일반용1_하절기'] * Factor * UnitHeat[i] + BasicPrice
-			} else if ([0, 1, 2, 11] / includes(i)) {
+			} else if ([0, 1, 2, 11].includes(i)) {
 				var GasPrice = G * FILE['일반용1_동절기'] * Factor * UnitHeat[i] + BasicPrice
 			} else {
 				var GasPrice = G * FILE['일반용1_기타월'] * Factor * UnitHeat[i] + BasicPrice

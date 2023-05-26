@@ -48,7 +48,41 @@ function updateUserInput(userInput) {
     return userInput
 }
 
+function changeApplyBuisness(userInput, detailedFundInformationInput) {
+    //1. green
+    if (userInput.buildingType == '비주거') {
+        if (['신한은행','제주은행','기업은행','국민은행','농협은행'].includes(userInput.card)){
+        } else {
+            detailedFundInformationInput.applyGreen = false
+        }
+    } else if (userInput.buildingType == '주거-단독') {
+        if (['신한은행','우리은행','국민은행','농협은행','신한카드'].includes(userInput.card)){
+        } else {
+            detailedFundInformationInput.applyGreen = false
+        }
+    } else {
+        if (['신한은행','우리은행','국민은행','농협은행','롯데카드','신한카드','삼성카드'].includes(userInput.card)){
+        } else {
+            detailedFundInformationInput.applyGreen = false
+        }
+    }
+    // 2. seoul
+    if (['주거-단독','주거-다중', '주거-다가구', '주거-다세대', '주거-연립'].includes(userInput.buildingType)) {
+    } else {
+        detailedFundInformationInput.applySeoul = false
+    }
+
+    if (2022-userInput.approvalYear >= 20) {
+    } else if (2022-userInput.approvalYear >=10) {
+    } else {
+        detailedFundInformationInput.applySeoul = false
+    }
+
+    return detailedFundInformationInput
+}
+
+import { greenRemodelingInterestSupportProject } from "../configs/fund.js"
 import { userInput } from "../controllers/client_input.js";
 var updatedUserInput = updateUserInput(userInput)
 
-export { updatedUserInput, updateUserInput }
+export { updatedUserInput, updateUserInput , changeApplyBuisness}
