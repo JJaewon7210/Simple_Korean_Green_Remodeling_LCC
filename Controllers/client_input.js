@@ -1,5 +1,5 @@
 var userInput = {
-    "buildingType": "비주거", "city": "서울", "approvalYear": 1980, "card": "국민은행"
+    "buildingType": "비주거", "city": "서울", "approvalYear": 1980, "card": "우리은행"
 }
 
 var energyContract = {
@@ -27,26 +27,26 @@ var remodelingTechInput = {
     // 1. 벽체
     "wall": {
         "name": ['외단열 덧댐시공', '외단열 덧댐시공', '외단열 덧댐시공', '외단열 덧댐시공'], 
-        "size": [80, 120, 80, 120], //m2 벽체면적
-        "material cost": [150, 6000, 150, 6000] //원 단가
+        "size": [270, 270, 270, 270], //m2 벽체면적
+        "material cost": [150, 150, 150, 150] //원 단가
     },
     // 2. 지붕
     "roof": {
-        "name": [], 
-        "size": [], //m2 지붕면적
-        "material cost": [] //원 단가
+        "name": ["외단열 덧댐시공"], 
+        "size": [100], //m2 지붕면적
+        "material cost": [135] //원 단가
     },
     // 3. 바닥
     "floor": {
         "name": ["내단열 덧댐시공"], 
-        "size": [120], //m2 바닥면적
-        "material cost": [30400] //원 단가
+        "size": [100], //m2 바닥면적
+        "material cost": [120] //원 단가
     },
     // 4. 창문
     "window": {
-        "name": ["창호 교체"],
-        "size": [40], //m2 창호면적
-        "material cost": [174500]  //원 단가
+        "name": ["창호 교체","창호 교체","창호 교체","창호 교체"],
+        "size": [0, 0, 0, 0], //m2 창호면적
+        "material cost": [159500, 174500, 159500, 141500]  //원 단가
     },
     // 5. 조명
     "light": {
@@ -56,25 +56,25 @@ var remodelingTechInput = {
     },
     // 6. 내부차장
     "interiorBlind": {
-        "name": ['내부 베네시안 블라인드', '롤 블라인드'],
-        "size": [20, 20], //m2
-        "material cost": [11400, 14000]
+        "name": ["롤 블라인드","롤 블라인드","롤 블라인드","롤 블라인드"],
+        "size": [0, 0, 0, 0], //m2
+        "material cost": [11400, 14000, 14000, 14000]
     },
     //7. 외부차양
     "exteriorBlind": {
-        "name": ["외부 베네시안 블라인드"],
-        "size": [20], //m2
+        "name": ["외부 베네시안 블라인드","외부 베네시안 블라인드","외부 베네시안 블라인드","외부 베네시안 블라인드"],
+        "size": [20, 20, 20, 20], //m2
     },
     // 8. 태양광
     "renewable": {
         "name": ["태양광 시스템"],
-        "size": [3.3], //kW
+        "size": [], //kW
     },
     // 9. 출입문
     "door": {
-        "name": ["철재문 (양개)"],
-        "size": [1], // 짝
-        "material cost": [450000]
+        "name": ["철재문 (편개)"],
+        "size": [], // 짝
+        "material cost": [254503]
     },
     // 10. 냉동기
     "freezer": {
@@ -91,8 +91,8 @@ var remodelingTechInput = {
     // 12. 공조기
     "AHU": {
 
-        "size": [], // 대
-        "material cost": []
+        "size": [1], // 대
+        "material cost": [4860900]
     },
     // 13. 히트펌프
     "heatpump": {
@@ -103,19 +103,19 @@ var remodelingTechInput = {
 }
 
 var detailedFundInformationInput = {
-    'mortageLoanMaxLimit': 100000000, // 주택담보대출 최대한도
-    'mortageLoanInterest': 0.0443, // 주택담보대출 이자율
-    'mortageLoanRepaymentMonth': 25*12, // 주택담보대출상환기간 (월)
-    'mortageLoanHoldMonth': 0, // 주택담보대출 거치기간 (기본값 = 0)
+    'mortageLoanMaxLimit': 15000000, // 주택담보대출 최대한도
+    'mortageLoanInterest': 0.027, // 주택담보대출 이자율
+    'mortageLoanRepaymentMonth': 240, // 주택담보대출상환기간 (월)
+    'mortageLoanHoldMonth': 36, // 주택담보대출 거치기간 (기본값 = 0)
 
-    'creditLoanMaxLimit': 100000000, // 신용대출 최대한도
-    'creditLoanInterest': 0.0662, // 신용대출 이자율
-    'creditLoanRepaymentMonth': 10*12, //신용대출 상환기간 (월)
-    'creditLoanHoldMonth': 0, //신용대출 거치기간 (기본값 = 0)
+    'creditLoanMaxLimit': 10000000, // 신용대출 최대한도
+    'creditLoanInterest': 4.30, // 신용대출 이자율
+    'creditLoanRepaymentMonth': 60, //신용대출 상환기간 (월)
+    'creditLoanHoldMonth': 60, //신용대출 거치기간 (기본값 = 0)
 
-    'applyGreen': true, // 그린리모델링 이자지원 사업을 적용하는 경우 true, 아닌 경우 false
+    'applyGreen': false, // 그린리모델링 이자지원 사업을 적용하는 경우 true, 아닌 경우 false
     'applySeoul': true, // 서울시 집수리 융자사업을 적용하는 경우 true, 아닌 경우 false
-    'applyRural': false, // 농어촌 주택개량사업을 적용하는 경우 true, 아닌 경우 false
+    'applyRural': true, // 농어촌 주택개량사업을 적용하는 경우 true, 아닌 경우 false
     'applyMortage': true, // 주택담보대출을 적용하는 경우 true, 아닌 경우 false
     'applyCredit': true, // 신용대출을 적용하는 경우 true, 아닌 경우 false
 

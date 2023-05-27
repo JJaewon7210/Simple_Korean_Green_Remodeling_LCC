@@ -224,15 +224,15 @@ function getOutput(userInput, energyContract, monthlyElectricityInput, monthlyGa
         var B4 = this.fund.mortageLoanProject
         var B5 = this.fund.creditLoanProject
         var B6 = this.userData.initialUserCapital
-
+        
         var L = {
             remainLoan: parseInt(totalRemodelingCost - (B1.min + B2.min + B3.min + B4.min + B5.min + B6)),
-            totalGap: B1.max - B1.loanAmount
-                + B2.max - B2.loanAmount
-                + B3.max - B3.loanAmount
-                + B4.max - B4.loanAmount
-                + B5.max - B5.loanAmount
-            }
+            totalGap: B1.max - B1.min
+            + B2.max - B2.min
+            + B3.max - B3.min
+            + B4.max - B4.min
+            + B5.max - B5.min
+        }
 
         function allocateRandomLoanForProject(L, Business, i) {
             // skip the process, when buisness is not used.
@@ -452,8 +452,7 @@ function getOutput(userInput, energyContract, monthlyElectricityInput, monthlyGa
     }
         
     genetic.generation = function (pop, generation, stats) {
-        // stop running once we've reached the solution
-        return true
+        return true;
     };
 
     // 1. Add information to 'detailed fund information input'
@@ -491,7 +490,6 @@ function getOutput(userInput, energyContract, monthlyElectricityInput, monthlyGa
 
     let remainLoan = parseInt(totalRemodelingCost - (B1.min + B2.min + B3.min + B4.min + B5.min + B6))
     let totalGap = B1.gap + B2.gap + B3.gap + B4.gap + B5.gap
-
     var excessCost = 0
     if (remainLoan > totalGap) { 
         excessCost += remainLoan - totalGap
@@ -524,8 +522,8 @@ function getOutput(userInput, energyContract, monthlyElectricityInput, monthlyGa
     var config = {
         "iterations": 700
         , "size": 30
-        , "crossover": 0.5
-        , "mutation": 0.5
+        , "crossover": 0.3
+        , "mutation": 0.7
         , "skip": 0
         , "fittestAlwaysSurvives": true
     };
