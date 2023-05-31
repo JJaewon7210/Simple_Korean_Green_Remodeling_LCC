@@ -8,6 +8,7 @@ export function electricityCostCalculate( montlyElectricityConsumption, userInpu
 	} else {
 		var annualElectricityCashFlows = residentialElectricityCalculate(montlyElectricityConsumption, energyContract)
 	}
+
 	return annualElectricityCashFlows
 }
 

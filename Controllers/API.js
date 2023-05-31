@@ -728,7 +728,7 @@ function getCustomOutput(customizedRatio, userInput, energyContract, monthlyElec
     var EPRICE_BEFORE = electricityCostCalculate(monthlyElectricityInput.before, updatedUserInput, energyContract)
     var EPRICE_AFTER = electricityCostCalculate(monthlyElectricityInput.after, updatedUserInput, energyContract)
     var electricityNPV = NPVcalculate(EPRICE_BEFORE - EPRICE_AFTER, LCCAssumptionInput.electricityRealInterest, LCCAssumptionInput.analysisPeriod)
-
+    
     var GPRICE_BEFORE = gasCostCalculate(monthlyGasInput.before, updatedUserInput)
     var GPRICE_AFTER = gasCostCalculate(monthlyGasInput.after, updatedUserInput)
     var gasNPV = NPVcalculate(GPRICE_BEFORE - GPRICE_AFTER, LCCAssumptionInput.gasRealInterest, LCCAssumptionInput.analysisPeriod)

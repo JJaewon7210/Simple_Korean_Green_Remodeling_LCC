@@ -115,10 +115,10 @@ function getAnnualCashFlowsOfWindow(techName, size, userInput, analysisPeriod, m
 	if (
 		techName === "고단열고기밀 창호"
 	) {
-		let filteredInfos = roofDB.filter(
+		let filteredInfos = windowDB.filter(
 			obj => obj["개선시나리오"] == techName
 				&& obj["개선기준"] == "군자동 내역서")[0];
-
+			
 		let repairRatio = filteredInfos['수선율']
 		let repairCycle = filteredInfos['수선주기']
 		let replacementCycle = filteredInfos['교체주기']

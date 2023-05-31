@@ -45,7 +45,7 @@ export function NPVcalculate (yearPayments, realInterest , year){
 	if (typeof (yearPayments) == 'number') {
 		var NPV = 0
 		for (var i = 0; i < year; i++) {
-			var presentValue = yearPayments / ((1 + realInterest) ** i)
+			var presentValue = yearPayments / ((1 + parseFloat(realInterest)) ** i)
 			NPV += presentValue
 		}
 		return NPV
@@ -53,7 +53,7 @@ export function NPVcalculate (yearPayments, realInterest , year){
 	} else {
 		var NPV = 0
 		for (var i = 0; i < yearPayments.length; i++) {
-			var presentValue = yearPayments[i] / ((1 + realInterest) ** i)
+			var presentValue = yearPayments[i] / ((1 + parseFloat(realInterest)) ** i)
 			NPV += presentValue
 		}
 		return NPV
